@@ -13,6 +13,27 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
+            android:name=".cotizacion"
+            android:exported="false" />
+        <activity
+            android:name=".reserva"
+            android:exported="false" />
+        <activity
+            android:name=".detalle_maestro"
+            android:exported="false" />
+        <activity
+            android:name=".biblioteca_maestro"
+            android:exported="false" />
+        <activity
+            android:name=".home"
+            android:exported="false" />
+        <activity
+            android:name=".registro"
+            android:exported="false" />
+        <activity
+            android:name=".login"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
