@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bienvenida"
-    tools:context=".MainActivity">
+    tools:context="com.example.library.MainActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="376dp"
@@ -80,12 +80,12 @@
                 android:text="¿No tienes cuenta?"
                 android:textColor="#000000"
                 android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/button2"
+                app:layout_constraintBottom_toTopOf="@+id/cerrarSesion"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/cerrarSesion"
                 android:layout_width="201dp"
                 android:layout_height="54dp"
                 android:layout_marginBottom="28dp"
