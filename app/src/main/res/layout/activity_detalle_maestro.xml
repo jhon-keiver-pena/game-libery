@@ -5,6 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".detalle_maestro">
+    tools:context="com.example.library.DetalleMaestro">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

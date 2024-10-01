@@ -13,28 +13,28 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
-            android:name=".cotizacion"
+            android:name="com.example.library.cotizacion"
             android:exported="false" />
         <activity
-            android:name=".reserva"
+            android:name="com.example.library.Reserva"
             android:exported="false" />
         <activity
-            android:name=".detalle_maestro"
+            android:name="com.example.library.DetalleMaestro"
             android:exported="false" />
         <activity
-            android:name=".biblioteca_maestro"
+            android:name="com.example.library.BibliotecaMaestro"
             android:exported="false" />
         <activity
-            android:name=".home"
+            android:name="com.example.library.Home"
             android:exported="false" />
         <activity
-            android:name=".registro"
+            android:name="com.example.library.Registro"
             android:exported="false" />
         <activity
-            android:name=".login"
+            android:name="com.example.library.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.library.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
