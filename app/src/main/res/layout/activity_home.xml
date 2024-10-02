@@ -77,7 +77,6 @@
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="Ir a Biblioteca"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 app:cornerRadius="25dp"
                 app:iconSize="20dp"
