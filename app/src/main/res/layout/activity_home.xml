@@ -36,7 +36,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/imageView7"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btt_registrar"
+                app:layout_constraintStart_toEndOf="@+id/btn_registrar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -87,7 +87,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/btt_registrar"
+                android:id="@+id/btn_registrar"
                 android:layout_width="124dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="45dp"

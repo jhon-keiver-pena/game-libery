@@ -3,10 +3,8 @@ package com.example.library;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,29 +26,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //llamada por id
-        inicio = findViewById(R.id.btt_iniciar);
-        registrar = findViewById(R.id.btt_registrar);
+        inicio = findViewById(R.id.btn_iniciar);
+        registrar = findViewById(R.id.btn_registrar);
 
-        //public void onClick(View view) {
-            // escribo la logica para iniciar sesion (los if)
-            //String username = usuario.getText().toString();
-            //String contrasena = MainActivity.this.contrasena.getText().toString();
+        //funcionalidad de los botones
+        inicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), Home.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-            //if (TextUtils.isEmpty(username) || TextUtils.isEmpty(contrasena)){
-                // toast = notificacion
-                Toast.makeText(getBaseContext(),"Por favor ingrese usuario y contraseña", Toast.LENGTH_SHORT).show();
-            //} else{
-                //if (username.equals(admin.usuario) && contrasena.equals(admin.contrasena)){
-                    // abre un activity
-                    //Intent intent = new Intent(getBaseContext(), Ficha_act.class);
-                    //startActivity(intent);
-                    //finish();
-
-                //}else {
-                    // toas = notificacion
-                    //Toast.makeText(getBaseContext(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                //}
-            //}
+        registrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), Registro.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         };
 
 
