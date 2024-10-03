@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //llamada por id
-        inicio = findViewById(R.id.btn_iniciar);
+        inicio = findViewById(R.id.btn_inicio);
         registrar = findViewById(R.id.btn_registrar);
 
         //funcionalidad de los botones
@@ -50,8 +50,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         };
-
-
-
-
     }

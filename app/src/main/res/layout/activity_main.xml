@@ -56,13 +56,13 @@
                 android:textColorLink="#000000"
                 android:textSize="20sp"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/btn_iniciar"
+                app:layout_constraintBottom_toTopOf="@+id/btn_inicio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.57"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/btn_iniciar"
+                android:id="@+id/btn_inicio"
                 android:layout_width="202dp"
                 android:layout_height="54dp"
                 android:layout_marginBottom="24dp"

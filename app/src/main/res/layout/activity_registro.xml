@@ -29,14 +29,14 @@
                 android:textColor="#000000"
                 android:textSize="48sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/editTextText"
+                app:layout_constraintBottom_toTopOf="@+id/editNombre"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.259" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/editNombre"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="16dp"
@@ -48,13 +48,13 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editTextText2"
+                app:layout_constraintBottom_toTopOf="@+id/editApellido"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/editApellido"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="16dp"
@@ -66,13 +66,13 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editTextPhone"
+                app:layout_constraintBottom_toTopOf="@+id/editTelefono"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editTextPhone"
+                android:id="@+id/editTelefono"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="24dp"
@@ -84,13 +84,13 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintBottom_toTopOf="@+id/editCorreo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editTextTextEmailAddress"
+                android:id="@+id/editCorreo"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="28dp"
@@ -102,13 +102,13 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
+                app:layout_constraintBottom_toTopOf="@+id/editContrasena"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/editContrasena"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="32dp"
@@ -119,17 +119,19 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/button_crear"
+                app:layout_constraintBottom_toTopOf="@+id/btn_crear"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button_crear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/btn_crear"
+                android:layout_width="145dp"
+                android:layout_height="51dp"
                 android:layout_marginBottom="24dp"
+                android:background="@drawable/background_btn_ok"
                 android:text="Crear cuenta"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toTopOf="@+id/textView5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -142,18 +144,20 @@
                 android:layout_marginEnd="1dp"
                 android:layout_marginBottom="72dp"
                 android:text="Ya tienes una cuenta?"
-                android:textColor="#000000"
+                android:textColor="#FDFDFD"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_ir_iniciar"
+                app:layout_constraintEnd_toStartOf="@+id/btn_inicio"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button_ir_iniciar"
+                android:id="@+id/btn_inicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_btn_principal"
                 android:text="Iniciar Sesion"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.958"

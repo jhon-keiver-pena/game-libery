@@ -9,6 +9,9 @@ import com.example.gamelibery.R;
 
 public class Registro extends AppCompatActivity {
 
+    //declaracion de variables
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
