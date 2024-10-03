@@ -40,4 +40,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // Agregar dependencias de OkHttp y Gson
+    implementation(libs.okhttp)
+    implementation(libs.gson)
+
 }

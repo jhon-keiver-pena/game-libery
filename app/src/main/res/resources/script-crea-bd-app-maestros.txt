@@ -1,0 +1,40 @@
+-- Crear la base de datos APP_MOBILE_MASTER
+CREATE DATABASE IF NOT EXISTS APP_MOBILE_MASTER;
+USE APP_MOBILE_MASTER;
+
+-- Tabla USUARIO
+CREATE TABLE USUARIO (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(80),
+    apellido VARCHAR(80),
+    telefono VARCHAR(15),
+    correo VARCHAR(50),
+    clave VARCHAR(20)
+);
+
+-- Tabla MAESTRO
+CREATE TABLE MAESTRO (
+    id_maestro INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(80),
+    telefono VARCHAR(15),
+    edad INT,
+    sexo VARCHAR(1),
+    experiencia VARCHAR(200),
+    tiempo_campo DATE,
+    especialidad VARCHAR(30),
+    url_imagen VARCHAR(200)
+);
+
+-- Tabla RESERVA
+CREATE TABLE RESERVA (
+    id_reserva INT AUTO_INCREMENT PRIMARY KEY,
+    id_maestro INT,
+    fecha_visita DATE,
+    coste DECIMAL(10, 2),
+    ciudad VARCHAR(30),
+    id_usuario INT,
+    FOREIGN KEY (id_maestro) REFERENCES MAESTRO(id_maestro),
+    FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario)
+);
+
+ALTER TABLE USUARIO ADD CONSTRAINT UC_correo UNIQUE (correo);
