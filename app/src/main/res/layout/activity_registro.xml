@@ -102,13 +102,13 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editContrasena"
+                app:layout_constraintBottom_toTopOf="@+id/editClave"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editContrasena"
+                android:id="@+id/editClave"
                 android:layout_width="295dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="32dp"
