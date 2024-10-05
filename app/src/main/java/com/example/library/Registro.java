@@ -1,7 +1,9 @@
 package com.example.library;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,9 +24,10 @@ import java.util.concurrent.Executors;
 public class Registro extends AppCompatActivity {
 
     private EditText editNombre, editApellido, editTelefono, editCorreo, editClave;
-    private Button btnCrear;
+    private Button btnCrear, btnInicio;
     private ExecutorService executor;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,7 @@ public class Registro extends AppCompatActivity {
         editCorreo = findViewById(R.id.editCorreo);
         editClave = findViewById(R.id.editClave);
         btnCrear = findViewById(R.id.btn_crear);
+        btnInicio = findViewById(R.id.btn_ir_inicio);
 
         // Inicializar el ExecutorService
         executor = Executors.newSingleThreadExecutor();
@@ -55,6 +59,16 @@ public class Registro extends AppCompatActivity {
                 sendData(nombre, apellido, telefono, correo, clave);
             } else {
                 Toast.makeText(Registro.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
