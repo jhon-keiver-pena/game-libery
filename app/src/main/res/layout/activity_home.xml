@@ -62,12 +62,12 @@
                 android:textColorLink="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/button1"
+                app:layout_constraintBottom_toTopOf="@+id/ir_biblioteca"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/ir_biblioteca"
                 android:layout_width="202dp"
                 android:layout_height="54dp"
                 android:layout_marginStart="87dp"

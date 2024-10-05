@@ -1,102 +1,61 @@
 package com.example.library.model.rest;
 
+
 public class Maestro {
-    private int id_maestro;
+    private int id;
     private String nombre;
     private String telefono;
-    private int edad;
+    private String edad;
     private String sexo;
     private String experiencia;
-    private String tiempo_campo; // Considera usar Date si es necesario
+    private String tiempoCampo;
     private String especialidad;
-    private String url_imagen; // Nueva columna
+    private String urlImagen;
 
-    public Maestro(int id_maestro, String nombre, String telefono, int edad,
-                   String sexo, String experiencia, String tiempo_campo, String especialidad,
-                   String url_imagen) {
-        this.id_maestro = id_maestro;
+    // Constructor, getters y setters
+    public Maestro(int id, String nombre, String telefono, String edad, String sexo,
+                   String experiencia, String tiempoCampo, String especialidad, String urlImagen) {
+        this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
         this.edad = edad;
         this.sexo = sexo;
         this.experiencia = experiencia;
-        this.tiempo_campo = tiempo_campo;
+        this.tiempoCampo = tiempoCampo;
         this.especialidad = especialidad;
-        this.url_imagen = url_imagen;
+        this.urlImagen = urlImagen;
     }
 
-    public Maestro() {
-    }
-
-    public int getId_maestro() {
-        return id_maestro;
-    }
-
-    public void setId_maestro(int id_maestro) {
-        this.id_maestro = id_maestro;
-    }
-
+    // Getters
     public String getNombre() {
         return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public int getEdad() {
+    public String getEdad() {
         return edad;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
     }
 
     public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-
     public String getExperiencia() {
         return experiencia;
     }
 
-    public void setExperiencia(String experiencia) {
-        this.experiencia = experiencia;
-    }
-
-    public String getTiempo_campo() {
-        return tiempo_campo;
-    }
-
-    public void setTiempo_campo(String tiempo_campo) {
-        this.tiempo_campo = tiempo_campo;
+    public String getTiempoCampo() {
+        return tiempoCampo;
     }
 
     public String getEspecialidad() {
         return especialidad;
     }
 
-    public void setEspecialidad(String especialidad) {
-        this.especialidad = especialidad;
-    }
-
-    public String getUrl_imagen() {
-        return url_imagen;
-    }
-
-    public void setUrl_imagen(String url_imagen) {
-        this.url_imagen = url_imagen;
+    public String getUrlImagen() {
+        return urlImagen;
     }
 }
