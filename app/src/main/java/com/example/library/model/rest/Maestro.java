@@ -1,7 +1,9 @@
 package com.example.library.model.rest;
 
 
-public class Maestro {
+import java.io.Serializable;
+
+public class Maestro  implements Serializable {
     private int id;
     private String nombre;
     private String telefono;
