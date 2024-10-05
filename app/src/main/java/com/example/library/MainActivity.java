@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //llamada por id
-        inicio = findViewById(R.id.btn_inicio);
+        inicio = findViewById(R.id.btn_ir_inicio);
         registrar = findViewById(R.id.btn_registrar);
 
         //funcionalidad de los botones
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //redirige a un activity
-                Intent intent = new Intent(getBaseContext(), Home.class);
+                Intent intent = new Intent(getBaseContext(), Login.class);
                 startActivity(intent);
                 finish();
             }
