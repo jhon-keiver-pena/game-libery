@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -80,6 +81,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
                     response.append(line);
                 }
                 reader.close();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
                 // Parsear el JSON y extraer los detalles completos de cada maestro
                 JSONArray jsonArray = new JSONArray(response.toString());
@@ -92,7 +94,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
                             jsonObject.getString("edad"),
                             jsonObject.getString("sexo"),
                             jsonObject.getString("experiencia"),
-                            jsonObject.getString("tiempo_campo"),
+                            formatter.parse(jsonObject.getString("tiempo_campo")),
                             jsonObject.getString("especialidad"),
                             jsonObject.getString("url_imagen")
                     );

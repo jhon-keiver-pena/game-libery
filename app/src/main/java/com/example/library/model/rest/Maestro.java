@@ -2,6 +2,7 @@ package com.example.library.model.rest;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Maestro  implements Serializable {
     private int id;
@@ -10,13 +11,13 @@ public class Maestro  implements Serializable {
     private String edad;
     private String sexo;
     private String experiencia;
-    private String tiempoCampo;
+    private Date tiempoCampo;
     private String especialidad;
     private String urlImagen;
 
     // Constructor, getters y setters
     public Maestro(int id, String nombre, String telefono, String edad, String sexo,
-                   String experiencia, String tiempoCampo, String especialidad, String urlImagen) {
+                   String experiencia, Date tiempoCampo, String especialidad, String urlImagen) {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -49,7 +50,7 @@ public class Maestro  implements Serializable {
         return experiencia;
     }
 
-    public String getTiempoCampo() {
+    public Date getTiempoCampo() {
         return tiempoCampo;
     }
 
