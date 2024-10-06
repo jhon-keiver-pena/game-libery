@@ -2,14 +2,13 @@ package com.example.library;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamelibery.R;
-import com.example.library.model.MaestroAdapter;
 import com.example.library.model.rest.Maestro;
 
 import org.json.JSONArray;
@@ -23,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 public class BibliotecaMaestro extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private MaestroAdapter adapter;
-    private List<Maestro> maestroList;
+    private ListView listViewMaestros;
+    private ArrayAdapter<String> adapter;
+    private List<Maestro> maestroList; // Lista completa de objetos Maestro
+    private List<String> maestroInfoList; // Lista para mostrar solo nombre y especialidad
     private ExecutorService executor;
 
     @Override
@@ -36,23 +35,35 @@ public class BibliotecaMaestro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biblioteca_maestro);
 
-        recyclerView = findViewById(R.id.recyclerViewMaestros);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Inicializar ListView y listas
+        listViewMaestros = findViewById(R.id.listViewMaestros);
+        maestroInfoList = new ArrayList<>();
+        maestroList = new ArrayList<>(); // Aquí almacenamos los objetos completos
 
-        maestroList = new ArrayList<>();
-        adapter = new MaestroAdapter(maestroList, this);
-        recyclerView.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, maestroInfoList);
+        listViewMaestros.setAdapter(adapter);
 
         // Inicializar el ExecutorService
         executor = Executors.newSingleThreadExecutor();
 
         // Cargar los maestros
         loadMaestros();
+
+        // Configurar la acción al hacer clic en un elemento de la lista
+        listViewMaestros.setOnItemClickListener((parent, view, position, id) -> {
+            Maestro selectedMaestro = maestroList.get(position); // Obtenemos el maestro seleccionado
+
+            // Pasamos el objeto Maestro al siguiente Activity
+            Intent intent = new Intent(BibliotecaMaestro.this, DetalleMaestro.class);
+            intent.putExtra("maestro", selectedMaestro); // Pasamos el objeto Maestro (debe ser Serializable o Parcelable)
+            startActivity(intent);
+        });
     }
 
     private void loadMaestros() {
         executor.execute(() -> {
             List<Maestro> maestros = new ArrayList<>();
+            List<String> maestrosInfo = new ArrayList<>();
             try {
                 URL url = new URL("http://10.0.2.2:80/app-mobile/maestro_api.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -70,6 +81,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
                 }
                 reader.close();
 
+                // Parsear el JSON y extraer los detalles completos de cada maestro
                 JSONArray jsonArray = new JSONArray(response.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -85,6 +97,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
                             jsonObject.getString("url_imagen")
                     );
                     maestros.add(maestro);
+                    maestrosInfo.add(maestro.getNombre() + " - " + maestro.getEspecialidad()); // Solo nombre y especialidad para mostrar en el ListView
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -94,13 +107,9 @@ public class BibliotecaMaestro extends AppCompatActivity {
             runOnUiThread(() -> {
                 maestroList.clear();
                 maestroList.addAll(maestros);
+                maestroInfoList.clear();
+                maestroInfoList.addAll(maestrosInfo);
                 adapter.notifyDataSetChanged();
-                if (maestros.isEmpty()) {
-                    Toast.makeText(this, "No se encontraron maestros", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getBaseContext(), Home.class);
-                    startActivity(intent);
-                    finish();
-                }
             });
         });
     }
