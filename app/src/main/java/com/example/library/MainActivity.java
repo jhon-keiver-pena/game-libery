@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //redirige a un activity
-                Intent intent = new Intent(getBaseContext(), Login.class);
+                Intent intent = new Intent(getBaseContext(), BibliotecaMaestro.class);
                 startActivity(intent);
                 finish();
             }
