@@ -1,6 +1,9 @@
 package com.example.library;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ public class DetalleMaestro extends AppCompatActivity {
 
     private TextView txtNombre, txtEdad, txtSexo, txtAno, txtExperiencia;
     private ImageView imageViewMaestro;
+    private Button btnReservar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class DetalleMaestro extends AppCompatActivity {
         txtAno = findViewById(R.id.txtAno);
         txtExperiencia = findViewById(R.id.txtExperiencia);
         imageViewMaestro = findViewById(R.id.imageView4);
+        btnReservar = findViewById(R.id.btnReserva);
 
         // Obtener el objeto Maestro pasado desde el Intent
         Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");
@@ -52,6 +57,17 @@ public class DetalleMaestro extends AppCompatActivity {
             // Ejemplo con Glide:
              Glide.with(this).load(maestro.getUrlImagen()).into(imageViewMaestro);
         }
+
+        //funcionalidad de los botones
+        btnReservar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), Reserva.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     public static String calcularFecha(Date fechaInicial) {
