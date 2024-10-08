@@ -72,12 +72,18 @@ tools:context="com.example.library.ListaReservaActivity">
                 android:id="@+id/textPrincipal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="18dp"
                 android:text="Reservas en Curso"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:layout_editor_absoluteX="160dp"
-                tools:layout_editor_absoluteY="19dp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_home"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
