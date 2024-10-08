@@ -11,9 +11,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="match_parent"
-        android:layout_height="580dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="413dp"
+        android:layout_height="635dp"
+        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,16 +21,16 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_bienvenida">
 
             <ListView
                 android:id="@+id/listViewMaestros"
-                android:layout_width="406dp"
-                android:layout_height="571dp"
+                android:layout_width="402dp"
+                android:layout_height="633dp"
                 android:layout_marginStart="1dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="4dp"
+                android:background="@drawable/gradient_bienvenida"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,49 +40,51 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="411dp"
-        android:layout_height="152dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="408dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="3dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/background_biblioteca">
+
 
             <Button
-                android:id="@+id/btnReserva"
+                android:id="@+id/btn_home"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="18dp"
-                android:layout_marginTop="23dp"
+                android:layout_marginTop="13dp"
                 android:layout_marginEnd="273dp"
-                android:layout_marginBottom="19dp"
-                android:background="@drawable/background_btn_principal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_btn_yellow"
                 android:text="Volver a Home"
-                app:layout_constraintBottom_toTopOf="@+id/editTextText"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextText"
-                android:layout_width="391dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="14dp"
-                android:layout_marginBottom="15dp"
-                android:ems="10"
-                android:inputType="text"
-                android:text="Buscar..."
+            <TextView
+                android:id="@+id/textPrincipal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="18dp"
+                android:text="Listado de Maestros"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnReserva" />
+                app:layout_constraintStart_toEndOf="@+id/btn_home"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
