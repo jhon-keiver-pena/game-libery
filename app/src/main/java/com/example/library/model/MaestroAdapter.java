@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.gamelibery.R;
+import com.example.library.DetalleMaestro;
 import com.example.library.model.rest.Maestro;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class MaestroAdapter extends RecyclerView.Adapter<MaestroAdapter.MaestroV
         holder.textEdad.setText(maestro.getEdad());
         holder.textSexo.setText(maestro.getSexo());
         holder.textExperiencia.setText(maestro.getExperiencia());
-        holder.textTiempoCampo.setText(maestro.getTiempoCampo());
+        holder.textTiempoCampo.setText(DetalleMaestro.calcularFecha(maestro.getTiempoCampo()));
         holder.textEspecialidad.setText(maestro.getEspecialidad());
 
         // Cargar la imagen usando Glide
