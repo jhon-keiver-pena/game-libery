@@ -82,12 +82,12 @@
                 android:text="¿No tienes cuenta?"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/btn_registrar"
+                app:layout_constraintBottom_toTopOf="@+id/btn_cerrar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/btn_registrar"
+                android:id="@+id/btn_cerrar"
                 android:background="@drawable/background_btn_ok"
                 android:layout_width="201dp"
                 android:layout_height="54dp"
