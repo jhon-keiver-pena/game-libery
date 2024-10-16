@@ -19,7 +19,7 @@
             android:name="com.example.library.ListaReservaActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.library.cotizacion"
+            android:name="com.example.library.Cotizar"
             android:exported="false" />
         <activity
             android:name="com.example.library.Reserva"

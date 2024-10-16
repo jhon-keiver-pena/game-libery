@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gamelibery.R;
 
-public class cotizacion extends AppCompatActivity {
+public class Cotizar extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
