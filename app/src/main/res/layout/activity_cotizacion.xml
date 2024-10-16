@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bienvenida"
-    tools:context="com.example.library.cotizacion">
+    tools:context="com.example.library.Cotizar">
 
     <androidx.cardview.widget.CardView
         android:layout_width="364dp"
@@ -92,12 +92,12 @@
                 android:layout_height="47dp"
                 android:layout_marginBottom="44dp"
                 android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/button2"
+                app:layout_constraintBottom_toTopOf="@+id/btn_cotizar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_cotizar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="36dp"
