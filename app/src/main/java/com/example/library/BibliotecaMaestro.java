@@ -3,6 +3,7 @@ package com.example.library;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,11 +32,14 @@ public class BibliotecaMaestro extends AppCompatActivity {
     private List<String> maestroInfoList; // Lista para mostrar solo nombre y especialidad
     private ExecutorService executor;
 
+    private Button btnVolverHome;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biblioteca_maestro);
 
+        btnVolverHome = findViewById(R.id.btn_home);
         // Inicializar ListView y listas
         listViewMaestros = findViewById(R.id.listViewMaestros);
         maestroInfoList = new ArrayList<>();
@@ -58,6 +62,13 @@ public class BibliotecaMaestro extends AppCompatActivity {
             Intent intent = new Intent(BibliotecaMaestro.this, DetalleMaestro.class);
             intent.putExtra("maestro", selectedMaestro); // Pasamos el objeto Maestro (debe ser Serializable o Parcelable)
             startActivity(intent);
+        });
+
+        btnVolverHome.setOnClickListener(view -> {
+            //redirige a un activity
+            Intent intent = new Intent(getBaseContext(), Home.class);
+            startActivity(intent);
+            finish();
         });
     }
 
