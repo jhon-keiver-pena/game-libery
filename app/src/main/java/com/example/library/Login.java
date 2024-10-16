@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.gamelibery.R;
+import com.example.library.service.UserService;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -97,6 +99,15 @@ public class Login extends AppCompatActivity {
 
                     // Verificar que el objeto no sea null y tenga datos
                     if (jsonResponse != null && jsonResponse.length() > 0) {
+                        UserService userService = (UserService) getApplicationContext();
+                        userService.getUsuario().setIdUsuario(jsonResponse.getInt("id_usuario"));
+                        userService.getUsuario().setNombre(jsonResponse.getString("nombre"));
+                        userService.getUsuario().setApellido(jsonResponse.getString("apellido"));
+                        userService.getUsuario().setTelefono(jsonResponse.getString("telefono"));
+                        userService.getUsuario().setCorreo(jsonResponse.getString("correo"));
+                        userService.getUsuario().setClave(jsonResponse.getString("clave"));
+                        userService.getUsuario().setLogin(true);
+
                         // Redirige a un activity si el usuario es válido
                         Intent intent = new Intent(getBaseContext(), Home.class);
                         startActivity(intent);
