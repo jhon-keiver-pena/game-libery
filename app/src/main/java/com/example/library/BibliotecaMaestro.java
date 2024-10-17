@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,7 +40,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
 
         btnVolverHome = findViewById(R.id.btn_home);
         // Inicializar ListView y listas
-        listViewMaestros = findViewById(R.id.listViewMaestros);
+        listViewMaestros = findViewById(R.id.listViewReservas);
         maestroInfoList = new ArrayList<>();
         maestroList = new ArrayList<>(); // Aquí almacenamos los objetos completos
 
