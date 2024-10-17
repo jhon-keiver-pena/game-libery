@@ -22,121 +22,138 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/spinner"
-                app:layout_constraintEnd_toStartOf="@+id/textView7"
+                android:id="@+id/imageView4"
+                android:layout_width="133dp"
+                android:layout_height="121dp"
+                app:layout_constraintBottom_toTopOf="@+id/textView8"
+                app:layout_constraintEnd_toStartOf="@+id/txtMaestro"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:srcCompat="@android:drawable/divider_horizontal_bright" />
 
             <TextView
-                android:id="@+id/textView7"
-                android:layout_width="145dp"
-                android:layout_height="29dp"
-                android:layout_marginEnd="32dp"
-                android:text="TextView"
+                android:id="@+id/txtMaestro"
+                android:layout_width="153dp"
+                android:layout_height="122dp"
+                android:layout_marginTop="16dp"
+                android:textAlignment="textStart"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView8"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.824"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.555" />
+                app:layout_constraintVertical_bias="0.111" />
 
             <TextView
                 android:id="@+id/textView8"
-                android:layout_width="141dp"
+                android:layout_width="193dp"
                 android:layout_height="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="64dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/spinner"
+                android:text="Selecione comuna y dia:"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/imageView2" />
+                app:layout_constraintHorizontal_bias="0.103"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.239" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/spinnerComuna"
                 android:layout_width="299dp"
                 android:layout_height="48dp"
-                android:layout_marginBottom="32dp"
                 android:backgroundTint="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/textView9"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.338"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.311" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/txtcomuna"
                 android:layout_width="299dp"
                 android:layout_height="45dp"
-                android:layout_marginBottom="20dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/spinner2"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.338"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.404" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnCotiza"
                 android:layout_width="186dp"
                 android:layout_height="48dp"
-                android:layout_marginBottom="24dp"
+                android:background="@drawable/background_btn_principal"
                 android:text="Cotizar"
-                app:layout_constraintBottom_toTopOf="@+id/textView10"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.703" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/txtValor"
                 android:layout_width="266dp"
                 android:layout_height="47dp"
-                android:layout_marginBottom="44dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/btn_cotizar"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.803" />
 
             <Button
-                android:id="@+id/btn_cotizar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="36dp"
+                android:id="@+id/btnCotizarR"
+                android:layout_width="165dp"
+                android:layout_height="49dp"
+                android:background="@drawable/background_btn_yellow"
                 android:text="Volver a biblioteca"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button3"
-                app:layout_constraintHorizontal_bias="0.333"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.155"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.943" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/btnConfirmar"
                 android:layout_width="123dp"
                 android:layout_height="49dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="36dp"
+                android:background="@drawable/background_btn_ok"
                 android:text="Reservar"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.896"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.943" />
 
             <Spinner
-                android:id="@+id/spinner2"
+                android:id="@+id/spinnerDias"
                 android:layout_width="305dp"
                 android:layout_height="48dp"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView11"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.44"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.372"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.499" />
 
             <TextView
-                android:id="@+id/textView11"
-                android:layout_width="285dp"
-                android:layout_height="44dp"
-                android:layout_marginBottom="16dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                android:id="@+id/txtDias"
+                android:layout_width="295dp"
+                android:layout_height="46dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.329"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.318"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.596" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

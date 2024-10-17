@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gamelibery.R;
 import com.example.library.model.rest.Maestro;
+import com.example.library.service.UserService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +38,16 @@ public class BibliotecaMaestro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Validar si esta logeado
+        UserService userService = (UserService) getApplicationContext();
+        if (!userService.getUsuario().isLogin()){
+            Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
+                    Toast.LENGTH_SHORT).show();
+            //redirige a un activity
+            Intent intent = new Intent(getBaseContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
         setContentView(R.layout.activity_biblioteca_maestro);
 
         btnVolverHome = findViewById(R.id.btn_home);
