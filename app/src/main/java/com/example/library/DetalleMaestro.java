@@ -13,6 +13,9 @@ import com.bumptech.glide.Glide;
 import com.example.gamelibery.R;
 import com.example.library.model.rest.Maestro;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,7 +23,7 @@ public class DetalleMaestro extends AppCompatActivity {
 
     private TextView txtNombre, txtEdad, txtSexo, txtAno, txtExperiencia;
     private ImageView imageViewMaestro;
-    private Button btnReservar;
+    private Button btnCotizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class DetalleMaestro extends AppCompatActivity {
         txtAno = findViewById(R.id.txtAno);
         txtExperiencia = findViewById(R.id.txtExperiencia);
         imageViewMaestro = findViewById(R.id.imageView4);
-        btnReservar = findViewById(R.id.btnCotizar);
+        btnCotizar = findViewById(R.id.btnCotizar);
 
         // Obtener el objeto Maestro pasado desde el Intent
         Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");
@@ -56,11 +59,18 @@ public class DetalleMaestro extends AppCompatActivity {
         }
 
         //funcionalidad de los botones
-        btnReservar.setOnClickListener(new View.OnClickListener() {
+        btnCotizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //redirige a un activity
                 Intent intent = new Intent(getBaseContext(), Cotizar.class);
+
+                // Pasar el objeto Maestro completo
+                if (maestro != null) {
+                    intent.putExtra("maestro", maestro);  // Pasamos el objeto Maestro
+                    intent.putExtra("nombre_maestro", maestro.getNombre());  // Pasamos el nombre del maestro
+                }
+
                 startActivity(intent);
                 finish();
             }
