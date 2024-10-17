@@ -1,5 +1,6 @@
 package com.example.library;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +21,9 @@ public class DetalleMaestro extends AppCompatActivity {
 
     private TextView txtNombre, txtEdad, txtSexo, txtAno, txtExperiencia;
     private ImageView imageViewMaestro;
-    private Button btnReservar;
+    private Button btnCotizar, btnVolverLista, btnIrHome;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,9 @@ public class DetalleMaestro extends AppCompatActivity {
         txtAno = findViewById(R.id.txtAno);
         txtExperiencia = findViewById(R.id.txtExperiencia);
         imageViewMaestro = findViewById(R.id.imageView4);
-        btnReservar = findViewById(R.id.btnCotizar);
+        btnCotizar = findViewById(R.id.btnCotizar);
+        btnVolverLista = findViewById(R.id.btnVolverLista);
+        btnIrHome = findViewById(R.id.btnIrHome);
 
         // Obtener el objeto Maestro pasado desde el Intent
         Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");
@@ -56,11 +60,29 @@ public class DetalleMaestro extends AppCompatActivity {
         }
 
         //funcionalidad de los botones
-        btnReservar.setOnClickListener(new View.OnClickListener() {
+        btnCotizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //redirige a un activity
                 Intent intent = new Intent(getBaseContext(), Cotizar.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        btnVolverLista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), BibliotecaMaestro.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        btnIrHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), Home.class);
                 startActivity(intent);
                 finish();
             }
