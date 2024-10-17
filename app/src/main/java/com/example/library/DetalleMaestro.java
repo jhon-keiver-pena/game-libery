@@ -6,12 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.gamelibery.R;
 import com.example.library.model.rest.Maestro;
+import com.example.library.service.UserService;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -28,7 +31,21 @@ public class DetalleMaestro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Validar si esta logeado
+        UserService userService = (UserService) getApplicationContext();
+        if (!userService.getUsuario().isLogin()){
+            Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
+                    Toast.LENGTH_SHORT).show();
+            //redirige a un activity
+            Intent intent = new Intent(getBaseContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detalle_maestro); // Tu XML
+
+
 
         // Obtener las referencias a los TextViews e ImageView
         txtNombre = findViewById(R.id.txtNombre);
