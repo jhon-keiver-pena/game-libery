@@ -3,6 +3,7 @@ package com.example.library;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,25 +32,32 @@ public class ListaReservaActivity extends AppCompatActivity {
     private List<String> maestroInfoList;
     private ListView listViewReservas;
     private List<ReservaElement> reservaElements;
+    private Button btnHome;
+    private ArrayAdapter<String> adapter; // Adaptador global
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Validar si esta logeado
+        // Validar si está logueado
         UserService userService = (UserService) getApplicationContext();
-        if (!userService.getUsuario().isLogin()){
-            Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
-                    Toast.LENGTH_SHORT).show();
-            //redirige a un activity
+        if (!userService.getUsuario().isLogin()) {
+            Toast.makeText(this, "Debes iniciar Sesión para acceder a esta pantalla", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getBaseContext(), Login.class);
             startActivity(intent);
             finish();
+            return; // Evitar seguir ejecutando el código si el usuario no está logueado
         }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.lista_reserva_activity);
 
+        btnHome = findViewById(R.id.btn_home);
+        btnHome.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), Home.class);
+            startActivity(intent);
+            finish();
+        });
 
-        // Inicializar el ExecutorService
         listViewReservas = findViewById(R.id.listViewReservas);
         executor = Executors.newSingleThreadExecutor();
 
@@ -58,14 +66,15 @@ public class ListaReservaActivity extends AppCompatActivity {
         reservaElements = new ArrayList<>();
 
         // Crear el adaptador para mostrar la lista en el ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, maestroInfoList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, maestroInfoList);
         listViewReservas.setAdapter(adapter);
+
+        // Obtener reservas para el usuario actual
         obtenerReservasPorUsuario(userService.getUsuario().getIdUsuario());
     }
 
     private void obtenerReservasPorUsuario(int idUsuario) {
         executor.execute(() -> {
-            String response = "";
             List<ReservaElement> reservasList = new ArrayList<>();
             List<String> reservasInfo = new ArrayList<>();
             try {
@@ -92,8 +101,6 @@ public class ListaReservaActivity extends AppCompatActivity {
                     // Convertir la respuesta a un array JSON
                     JSONArray jsonArray = new JSONArray(responseBuilder.toString());
 
-                    // Lista para almacenar las reservas
-
                     // Recorrer el array JSON y convertirlo en objetos Reserva
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonReserva = jsonArray.getJSONObject(i);
@@ -107,19 +114,20 @@ public class ListaReservaActivity extends AppCompatActivity {
 
                         reservasList.add(reserva); // Agregar reserva a la lista
                         reservasInfo.add(reserva.getIdReserva() +
-                                " - " + reserva.getFechaVisita()+ " - " +reserva.getCiudad()
-                        + " - " +reserva.getIdMaestro());
+                                " - " + reserva.getFechaVisita() + " - " + reserva.getCiudad()
+                                + " - " + reserva.getIdMaestro());
                     }
 
-
                 } else {
-                    response = "Error en la solicitud, código de respuesta: " + responseCode;
+                    // Manejar error en la solicitud
+                    runOnUiThread(() -> Toast.makeText(this, "Error en la solicitud: " + responseCode, Toast.LENGTH_SHORT).show());
                 }
 
                 httpURLConnection.disconnect();
             } catch (Exception e) {
-                response = "Error: " + e.getMessage();
+                runOnUiThread(() -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
+
             // Actualizar la UI en el hilo principal
             runOnUiThread(() -> {
                 reservaElements.clear();
@@ -127,9 +135,10 @@ public class ListaReservaActivity extends AppCompatActivity {
                 maestroInfoList.clear();
                 maestroInfoList.addAll(reservasInfo);
 
-
+                // Notificar al adaptador que los datos han cambiado
+                adapter.notifyDataSetChanged();
             });
-     });
+        });
     }
 
     @Override
@@ -137,5 +146,4 @@ public class ListaReservaActivity extends AppCompatActivity {
         super.onDestroy();
         executor.shutdown(); // Limpiar el ExecutorService
     }
-
 }
