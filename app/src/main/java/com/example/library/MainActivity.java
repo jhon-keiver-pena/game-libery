@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         //llamada por id
         inicio = findViewById(R.id.btn_ir_inicio);
-        registrar = findViewById(R.id.btn_cerrar);
+        registrar = findViewById(R.id.btn_Home);
 
         //funcionalidad de los botones
         inicio.setOnClickListener(new View.OnClickListener() {

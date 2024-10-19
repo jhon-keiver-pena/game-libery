@@ -37,7 +37,7 @@
     </string-array>
 
     <string-array name="dias">
-        <item>Seleccione dia</item>
+        <item></item>
         <item>Lunes</item>
         <item>Martes</item>
         <item>Miercoles</item>

@@ -29,7 +29,13 @@ public class Maestro  implements Serializable {
         this.urlImagen = urlImagen;
     }
 
+    public Maestro() {
+
+    }
+
     // Getters
+    public int getId() {return  id;}
+
     public String getNombre() {
         return nombre;
     }
@@ -60,5 +66,9 @@ public class Maestro  implements Serializable {
 
     public String getUrlImagen() {
         return urlImagen;
+    }
+
+    public void setId(int i) {
+        this.id=id;
     }
 }
