@@ -107,6 +107,7 @@ public class Reserva extends AppCompatActivity {
         String diaSeleccionado = getIntent().getStringExtra("dia");
         double valorCotizacion = getIntent().getDoubleExtra("valor_cotizacion", 0.0);
 
+        //mostrar datos validacion en logcat
         Log.d("Reserva", "idMaestro: " + idMaestro);
         Log.d("Reserva", "comunaSeleccionada: " + comunaSeleccionada);
         Log.d("Reserva", "diaSeleccionado: " + diaSeleccionado);
@@ -178,6 +179,11 @@ public class Reserva extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         int diaActual = calendar.get(Calendar.DAY_OF_WEEK);
         int diasHastaProximo = (diaDeseado - diaActual + 7) % 7;
+
+        Log.d("diaActual", ":" + diaActual);
+        Log.d("diaDeseado", ": " + diaDeseado);
+        Log.d("diaHastaProximo", ":" + diasHastaProximo);
+
 
         // Si hoy es el día deseado, obtenemos la fecha para la próxima semana
         if (diasHastaProximo == 0) {

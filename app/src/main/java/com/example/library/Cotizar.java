@@ -139,7 +139,6 @@ public class Cotizar extends AppCompatActivity {
                 String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
                 String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
                 double valorCotizado = generarPrecioPorComuna(comunaSeleccionada);
-                Maestro maestro = new Maestro();
 
                 Intent intent = new Intent(getBaseContext(), Reserva.class);
                 intent.putExtra("comuna", comunaSeleccionada);
@@ -170,7 +169,8 @@ public class Cotizar extends AppCompatActivity {
             double precioBase = generarPrecioPorComuna(comunaSeleccionada);
 
             // Aumentar el precio si es fin de semana (sábado o domingo)
-            if (diaSeleccionado.equalsIgnoreCase("Sábado") || diaSeleccionado.equalsIgnoreCase("Domingo")) {
+            if (diaSeleccionado.equalsIgnoreCase("Sábado")
+                    || diaSeleccionado.equalsIgnoreCase("Domingo")) {
                 precioBase += 15000; // Incremento adicional por ser fin de semana
             }
 
@@ -181,7 +181,7 @@ public class Cotizar extends AppCompatActivity {
                 precioBase = 20000;
             }
 
-            // Mostrar el precio final
+            // Mostrar el precio final en txtV
             valorCotizacion.setText("El precio final es: $" + precioBase);
         }
     }
