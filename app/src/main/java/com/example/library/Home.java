@@ -38,7 +38,7 @@ public class Home extends AppCompatActivity {
 
         btnCrear = findViewById(R.id.ir_biblioteca);
         btnReserva = findViewById(R.id.btn_reservas);
-        btnCerrar = findViewById(R.id.btn_cerrar);
+        btnCerrar = findViewById(R.id.btn_Home);
 
         vf = (ViewFlipper)findViewById(R.id.slider);
 

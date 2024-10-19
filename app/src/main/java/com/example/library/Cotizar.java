@@ -116,7 +116,8 @@ public class Cotizar extends AppCompatActivity {
 
         btnCotizar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 cotizar();
             }
         });
@@ -133,7 +134,18 @@ public class Cotizar extends AppCompatActivity {
         btnReserva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //datos que necesito pasar para Reservar
+                String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
+                String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
+                double valorCotizado = generarPrecioPorComuna(comunaSeleccionada);
+                Maestro maestro = new Maestro();
+
                 Intent intent = new Intent(getBaseContext(), Reserva.class);
+                intent.putExtra("comuna", comunaSeleccionada);
+                intent.putExtra("dia", diaSeleccionado);
+                intent.putExtra("valor_cotizacion", valorCotizado);
+                intent.putExtra("maestro", maestro);
                 startActivity(intent);
                 finish();
             }
@@ -145,17 +157,17 @@ public class Cotizar extends AppCompatActivity {
         String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
 
         // Validar que no se haya seleccionado "Seleccione Comuna" y "Seleccione Día"
-        if (comunaSeleccionada =="Seleccione Comuna" || comunaSeleccionada.isEmpty()) {
+        if (comunaSeleccionada.isEmpty()) {
             Toast.makeText(Cotizar.this, "Debe seleccionar una comuna válida", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (diaSeleccionado.equals("Seleccione día") || diaSeleccionado.isEmpty()) {
+        if (diaSeleccionado.isEmpty()) {
             Toast.makeText(Cotizar.this, "Debe seleccionar un día válido", Toast.LENGTH_SHORT).show();
             return;
         }else {
 
             // Generar un valor base de la comuna entre $20,000 y $50,000
-            int precioBase = generarPrecioPorComuna(comunaSeleccionada);
+            double precioBase = generarPrecioPorComuna(comunaSeleccionada);
 
             // Aumentar el precio si es fin de semana (sábado o domingo)
             if (diaSeleccionado.equalsIgnoreCase("Sábado") || diaSeleccionado.equalsIgnoreCase("Domingo")) {
@@ -174,9 +186,9 @@ public class Cotizar extends AppCompatActivity {
         }
     }
 
-    private int generarPrecioPorComuna(String comuna) {
+    private double generarPrecioPorComuna(String comuna) {
         // Definir un precio base fijo para algunas comunas
-        int precioBase;
+        double precioBase;
         switch (comuna) {
             case "Cerrillos":
             case "Cerro Navia":
