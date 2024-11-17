@@ -74,8 +74,9 @@ public class Login extends AppCompatActivity {
         executor.execute(() -> {
             String response = "";
             try {
-                // URL de la API con los parámetros de consulta
-                URL url = new URL("http://10.0.2.2:80/app-mobile/usuarios_api.php?correo=" + correo + "&clave=" + clave);
+                // Integracion api python en Nube
+                URL url = new URL("https://ms-usuarios-1078682117753.us-central1.run.app/v1/get-usuario-by-credentials?correo="
+                        + correo + "&clave=" + clave);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 // Configurar la conexión
