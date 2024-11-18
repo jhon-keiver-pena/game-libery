@@ -10,7 +10,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gamelibery.R;
-import com.example.gamelibery.registro_maestro;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //redirige a un activity
-                Intent intent = new Intent(getBaseContext(), registro_maestro.class);
+                Intent intent = new Intent(getBaseContext(), RegistroMaestro.class);
                 startActivity(intent);
                 finish();
             }
