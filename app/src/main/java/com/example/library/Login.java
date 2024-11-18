@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
         usuario = findViewById(R.id.input_mail);
         contraseña = findViewById(R.id.input_password);
         buttonini = findViewById(R.id.btn_inicio);
-        buttonregis = findViewById(R.id.btn_crear);
+        buttonregis = findViewById(R.id.btn_crear_maestro);
 
         buttonini.setOnClickListener(new View.OnClickListener() {
             @Override

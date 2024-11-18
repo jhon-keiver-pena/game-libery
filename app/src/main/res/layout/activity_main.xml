@@ -88,10 +88,10 @@
 
             <Button
                 android:id="@+id/btn_Home"
+                android:layout_width="165dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="56dp"
                 android:background="@drawable/background_btn_ok"
-                android:layout_width="201dp"
-                android:layout_height="54dp"
-                android:layout_marginBottom="28dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="Registrate"
@@ -102,8 +102,21 @@
                 app:iconPadding="0dp"
                 app:iconSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_r_maestro"
+                app:layout_constraintHorizontal_bias="0.363"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btn_r_maestro"
+                android:layout_width="151dp"
+                android:layout_height="54dp"
+                android:layout_marginBottom="52dp"
+                android:background="@drawable/background_btn_ok"
+                android:text="Registrate Maestro"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintHorizontal_bias="0.928"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
