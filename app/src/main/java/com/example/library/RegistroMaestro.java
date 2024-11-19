@@ -20,11 +20,12 @@ import com.example.gamelibery.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -34,12 +35,20 @@ public class RegistroMaestro extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView ivSelectedImage;
     private Uri imageUri;
+    //Inicio Variables que deben sustituirse por los elementos de la vista
+    private String sexo = "M";
+    private String edad = "56";
+    private String idCategoria = "1";
+    //Fin Variables que deben sustituirse por los elementos de la vista
+    private ExecutorService executorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro_maestro);
+
+        executorService = Executors.newSingleThreadExecutor(); // Executor para manejo de tareas en background
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -79,13 +88,14 @@ public class RegistroMaestro extends AppCompatActivity {
         EditText etName = findViewById(R.id.editNomMaestro);
         EditText etPhone = findViewById(R.id.editTlfMaestro);
         EditText etExperience = findViewById(R.id.editExperiencia);
-        EditText etTiempoCampo = findViewById(R.id.editExperiencia);
+        EditText etTiempoCampo = findViewById(R.id.editExperienciaCamp);
         EditText etEmail = findViewById(R.id.editCorreoMaestro);
         EditText etPass = findViewById(R.id.editClaveMaestro);
 
         String name = etName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String experience = etExperience.getText().toString().trim();
+        String tiempoCampo = etTiempoCampo.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
@@ -94,45 +104,66 @@ public class RegistroMaestro extends AppCompatActivity {
             return;
         }
 
-        OkHttpClient client = new OkHttpClient();
+        executorService.execute(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
 
-        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("name", name)
-                .addFormDataPart("phone", phone)
-                .addFormDataPart("experiencia", experience)
-                .addFormDataPart("email", email);
+                // Define the request body using application/x-www-form-urlencoded instead of multipart/form-data
+                String formBodyContent =
+                        "id_categoria=" + idCategoria +
+                        "&nombre=" + name +
+                        "&telefono=" + phone +
+                        "&edad=" + edad +
+                        "&sexo=" + sexo +
+                        "&experiencia=" + experience +
+                        "&tiempo_campo=" + tiempoCampo +
+                        "&correo=" + email +
+                        "&clave=" + pass;
 
-        // Agregar la imagen si se seleccionó
-        if (imageUri != null) {
-            File file = new File(imageUri.getPath());
-            RequestBody fileBody = RequestBody.create(file, MediaType.parse("image/*"));
-            requestBodyBuilder.addFormDataPart("image", file.getName(), fileBody);
-        }
+                // Agregar la imagen si se seleccionó
+                if (imageUri != null) {
+                    File file = new File(imageUri.getPath());
+                    formBodyContent += "&image=" + file.getName();
+                }
 
-        RequestBody requestBody = requestBodyBuilder.build();
+                // Crea el request body
+                RequestBody requestBody = RequestBody.create(formBodyContent, MediaType.parse("application/x-www-form-urlencoded"));
 
-        Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/v1/insert-maestro")
-                .post(requestBody)
-                .build();
+                Request request = new Request.Builder()
+                        .url("http://10.0.2.2:8080/v1/insert-maestro")
+                        .post(requestBody)
+                        .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al enviar los datos", Toast.LENGTH_SHORT).show());
-            }
+                // Realiza la solicitud HTTP en un hilo de fondo
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al enviar los datos", Toast.LENGTH_SHORT).show());
+                    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                runOnUiThread(() -> {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(RegistroMaestro.this, "Datos enviados con éxito", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(RegistroMaestro.this, "Error en el servidor", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        runOnUiThread(() -> {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(RegistroMaestro.this, "Datos enviados con éxito", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegistroMaestro.this, "Error en el servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
+
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al procesar la solicitud", Toast.LENGTH_SHORT).show());
             }
         });
+    }
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            // Limpiar el ExecutorService
+            if (executorService != null && !executorService.isShutdown()) {
+                executorService.shutdown();
+            }
     }
 }
