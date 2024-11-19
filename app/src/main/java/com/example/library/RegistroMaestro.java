@@ -1,6 +1,7 @@
 package com.example.library;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gamelibery.R;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -35,11 +39,21 @@ public class RegistroMaestro extends AppCompatActivity {
     private ImageView ivSelectedImage;
     private Uri imageUri;
 
+    //Inicio Variables que deben sustituirse por los elementos de la vista
+    private String sexo = "M";
+    private String edad = "56";
+    private String idCategoria = "1";
+    //Fin Variables que deben sustituirse por los elementos de la vista
+
+    private ExecutorService executorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro_maestro);
+
+        executorService = Executors.newSingleThreadExecutor(); // Executor para manejo de tareas en background
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -51,14 +65,15 @@ public class RegistroMaestro extends AppCompatActivity {
         Button btnCrearMaestro = findViewById(R.id.btn_crear_maestro);
         ivSelectedImage = findViewById(R.id.iv_selected_image);
 
-        btnSelectImage.setOnClickListener(v -> openImagePicker());
+        btnSelectImage.setOnClickListener(v -> openFileChooser());
         btnCrearMaestro.setOnClickListener(v -> sendFormData());
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Seleccionar Imagen"), PICK_IMAGE_REQUEST);
+    // Método para abrir el selector de archivos
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");  // Solo imágenes
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -79,13 +94,14 @@ public class RegistroMaestro extends AppCompatActivity {
         EditText etName = findViewById(R.id.editNomMaestro);
         EditText etPhone = findViewById(R.id.editTlfMaestro);
         EditText etExperience = findViewById(R.id.editExperiencia);
-        EditText etTiempoCampo = findViewById(R.id.editExperiencia);
+        EditText etTiempoCampo = findViewById(R.id.editExperienciaCamp);
         EditText etEmail = findViewById(R.id.editCorreoMaestro);
         EditText etPass = findViewById(R.id.editClaveMaestro);
 
         String name = etName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String experience = etExperience.getText().toString().trim();
+        String tiempoCampo = etTiempoCampo.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
@@ -94,45 +110,95 @@ public class RegistroMaestro extends AppCompatActivity {
             return;
         }
 
-        OkHttpClient client = new OkHttpClient();
+        executorService.execute(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
 
-        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("name", name)
-                .addFormDataPart("phone", phone)
-                .addFormDataPart("experiencia", experience)
-                .addFormDataPart("email", email);
+                // Crea el cuerpo del formulario con multipart/form-data
+                MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("id_categoria", idCategoria)
+                        .addFormDataPart("nombre", name)
+                        .addFormDataPart("telefono", phone)
+                        .addFormDataPart("edad", edad)
+                        .addFormDataPart("sexo", sexo)
+                        .addFormDataPart("experiencia", experience)
+                        .addFormDataPart("tiempo_campo", tiempoCampo)
+                        .addFormDataPart("correo", email)
+                        .addFormDataPart("clave", pass);
 
-        // Agregar la imagen si se seleccionó
-        if (imageUri != null) {
-            File file = new File(imageUri.getPath());
-            RequestBody fileBody = RequestBody.create(file, MediaType.parse("image/*"));
-            requestBodyBuilder.addFormDataPart("image", file.getName(), fileBody);
-        }
+                // Agregar la imagen si se seleccionó
+                if (imageUri != null) {
+                    // Obtiene el InputStream directamente sin necesidad de obtener la ruta
+                    InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                    byte[] imageBytes = getBytes(inputStream);  // Opcional: Si necesitas los bytes
+                    RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
+                    bodyBuilder.addFormDataPart("image", "image.jpg", imageRequestBody);
+                }
 
-        RequestBody requestBody = requestBodyBuilder.build();
+                // Crea el request body
+                RequestBody requestBody = bodyBuilder.build();
 
-        Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/v1/insert-maestro")
-                .post(requestBody)
-                .build();
+                Request request = new Request.Builder()
+                        .url("https://ms-maestros-1078682117753.us-central1.run.app/v1/insert-maestro")
+                        .post(requestBody)
+                        .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al enviar los datos", Toast.LENGTH_SHORT).show());
-            }
+                // Realiza la solicitud HTTP en un hilo de fondo
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al enviar los datos", Toast.LENGTH_SHORT).show());
+                    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                runOnUiThread(() -> {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(RegistroMaestro.this, "Datos enviados con éxito", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(RegistroMaestro.this, "Error en el servidor", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        runOnUiThread(() -> {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(RegistroMaestro.this, "Datos enviados con éxito", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegistroMaestro.this, "Error en el servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
+
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al procesar la solicitud", Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+
+    // Obtiene la ruta real del archivo desde la URI (para algunos dispositivos)
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        assert cursor != null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
+
+    // Convierte un InputStream en un arreglo de bytes
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            // Limpiar el ExecutorService
+            if (executorService != null && !executorService.isShutdown()) {
+                executorService.shutdown();
+            }
     }
 }
