@@ -20,7 +20,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.gamelibery.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
@@ -39,11 +38,13 @@ public class RegistroMaestro extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView ivSelectedImage;
     private Uri imageUri;
+
     //Inicio Variables que deben sustituirse por los elementos de la vista
     private String sexo = "M";
     private String edad = "56";
     private String idCategoria = "1";
     //Fin Variables que deben sustituirse por los elementos de la vista
+
     private ExecutorService executorService;
 
     @Override
@@ -139,7 +140,7 @@ public class RegistroMaestro extends AppCompatActivity {
                 RequestBody requestBody = bodyBuilder.build();
 
                 Request request = new Request.Builder()
-                        .url("http://10.0.2.2:8080/v1/insert-maestro")
+                        .url("https://ms-maestros-1078682117753.us-central1.run.app/v1/insert-maestro")
                         .post(requestBody)
                         .build();
 

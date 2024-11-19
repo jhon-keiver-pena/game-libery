@@ -2,6 +2,8 @@ package com.example.library;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -88,13 +90,9 @@ public class BibliotecaMaestro extends AppCompatActivity {
             List<Maestro> maestros = new ArrayList<>();
             List<String> maestrosInfo = new ArrayList<>();
             try {
-                URL url = new URL("http://10.0.2.2:80/app-mobile/maestro_api.php");
+                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
-
-                // Configura el timeout (en milisegundos)
-                conn.setConnectTimeout(8000); // Tiempo de espera de conexión
-                conn.setReadTimeout(8000);    // Tiempo de espera de lectura
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
@@ -109,22 +107,38 @@ public class BibliotecaMaestro extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(response.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String imageBase64 = jsonObject.isNull("image") ? null : jsonObject.optString("image"); // Usar optString para evitar errores
+                    byte[] imageBytes = null;
+                    if (imageBase64 !=null){
+                        try {
+                            imageBytes = Base64.decode(imageBase64, Base64.DEFAULT);
+                        } catch (IllegalArgumentException e) {
+                            Log.d("Decodificacion-imagen", "Error al decodificar immagen : {}", e);
+                        }
+                    }
+
                     Maestro maestro = new Maestro(
                             jsonObject.getInt("id_maestro"),
+                            jsonObject.getInt("id_categoria"),
                             jsonObject.getString("nombre"),
                             jsonObject.getString("telefono"),
                             jsonObject.getString("edad"),
                             jsonObject.getString("sexo"),
                             jsonObject.getString("experiencia"),
                             formatter.parse(jsonObject.getString("tiempo_campo")),
-                            jsonObject.getString("especialidad"),
-                            jsonObject.getString("url_imagen")
+                            jsonObject.getString("correo"),
+                            jsonObject.getString("clave"),
+                            imageBytes
                     );
+                    //TODO: Traer las categorias en una lista y el nombre
+                    // irlo asignando a cada maestro segun el id_categoria
+                    maestro.setNombreCategoria("Categoria Test");
                     maestros.add(maestro);
-                    maestrosInfo.add(maestro.getNombre() + " - " + maestro.getEspecialidad()); // Solo nombre y especialidad para mostrar en el ListView
+                    maestrosInfo.add(maestro.getNombre() + " - " + maestro.getNombreCategoria()); // Solo nombre y especialidad para mostrar en el ListView
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d("Lidado-maestros", "Error en listar : {}", e);
             }
 
             // Actualizar la UI en el hilo principal

@@ -1,7 +1,8 @@
 package com.example.library;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.gamelibery.R;
 import com.example.library.model.rest.Maestro;
 import com.example.library.service.UserService;
@@ -26,7 +26,7 @@ public class DetalleMaestro extends AppCompatActivity {
     private ImageView imageViewMaestro;
     private Button btnCotizar, btnVolverLista, btnIrHome;
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,9 +69,14 @@ public class DetalleMaestro extends AppCompatActivity {
             txtAno.setText(calcularFecha(maestro.getTiempoCampo())); // Asumiendo que este es el valor de "Año experiencia"
             txtExperiencia.setText(maestro.getExperiencia());
 
-            // Si tienes una URL de la imagen, puedes cargarla aquí (usando Glide o Picasso)
-            // Ejemplo con Glide:
-             Glide.with(this).load(maestro.getUrlImagen()).into(imageViewMaestro);
+            // Decodificar la imagen almacenada como byte[]
+            byte[] imageData = maestro.getImage();
+            if (imageData != null && imageData.length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                imageViewMaestro.setImageBitmap(bitmap); // Mostrar la imagen en el ImageView
+            } else {
+                imageViewMaestro.setImageResource(R.drawable.icono_default); // Imagen por defecto si no hay datos
+            }
         }
 
         //funcionalidad de los botones
@@ -117,15 +122,15 @@ public class DetalleMaestro extends AppCompatActivity {
         Calendar actual = Calendar.getInstance();
 
         // Calcular la diferencia en años y meses
-        int años = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int anos = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
         int meses = actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
 
         // Ajuste si el mes de inicio es mayor que el mes actual
         if (meses < 0) {
-            años--;
+            anos--;
             meses += 12;
         }
-        return años + " Años y " + meses + " Meses";
+        return anos + " Años y " + meses + " Meses";
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.library;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,12 +62,19 @@ public class Cotizar extends AppCompatActivity {
 
         // Mostrar el nombre del maestro si se ha recibido correctamente
         if (nombreMaestro != null) {
-            infoMaestro.setText('\n' + maestro.getNombre() + '\n'+  maestro.getEspecialidad());
+            infoMaestro.setText('\n' + maestro.getNombre() + '\n'+  maestro.getNombreCategoria());
         }
 
         if (maestro != null) {
-            // Cargar la imagen usando Glide
-            Glide.with(this).load(maestro.getUrlImagen()).into(imageViewMaestro);
+
+            // Decodificar la imagen almacenada como byte[]
+            byte[] imageData = maestro.getImage();
+            if (imageData != null && imageData.length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                imageViewMaestro.setImageBitmap(bitmap); // Mostrar la imagen en el ImageView
+            } else {
+                imageViewMaestro.setImageResource(R.drawable.icono_default); // Imagen por defecto si no hay datos
+            }
         }else {
             Log.d("Cotizar", "El maestro es null.");
         }
@@ -122,13 +131,11 @@ public class Cotizar extends AppCompatActivity {
             }
         });
 
-        btnBiblioteca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), BibliotecaMaestro.class);
-                startActivity(intent);
-                finish();
-            }
+        btnBiblioteca.setOnClickListener(view -> {
+            //redirige a un activity
+            Intent intent = new Intent(getBaseContext(), BibliotecaMaestro.class);
+            startActivity(intent);
+            finish();
         });
 
         btnReserva.setOnClickListener(new View.OnClickListener() {
