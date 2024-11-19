@@ -1,6 +1,7 @@
 package com.example.library;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,14 +19,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gamelibery.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -60,14 +64,15 @@ public class RegistroMaestro extends AppCompatActivity {
         Button btnCrearMaestro = findViewById(R.id.btn_crear_maestro);
         ivSelectedImage = findViewById(R.id.iv_selected_image);
 
-        btnSelectImage.setOnClickListener(v -> openImagePicker());
+        btnSelectImage.setOnClickListener(v -> openFileChooser());
         btnCrearMaestro.setOnClickListener(v -> sendFormData());
     }
 
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Seleccionar Imagen"), PICK_IMAGE_REQUEST);
+    // Método para abrir el selector de archivos
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");  // Solo imágenes
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -108,26 +113,30 @@ public class RegistroMaestro extends AppCompatActivity {
             try {
                 OkHttpClient client = new OkHttpClient();
 
-                // Define the request body using application/x-www-form-urlencoded instead of multipart/form-data
-                String formBodyContent =
-                        "id_categoria=" + idCategoria +
-                        "&nombre=" + name +
-                        "&telefono=" + phone +
-                        "&edad=" + edad +
-                        "&sexo=" + sexo +
-                        "&experiencia=" + experience +
-                        "&tiempo_campo=" + tiempoCampo +
-                        "&correo=" + email +
-                        "&clave=" + pass;
+                // Crea el cuerpo del formulario con multipart/form-data
+                MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("id_categoria", idCategoria)
+                        .addFormDataPart("nombre", name)
+                        .addFormDataPart("telefono", phone)
+                        .addFormDataPart("edad", edad)
+                        .addFormDataPart("sexo", sexo)
+                        .addFormDataPart("experiencia", experience)
+                        .addFormDataPart("tiempo_campo", tiempoCampo)
+                        .addFormDataPart("correo", email)
+                        .addFormDataPart("clave", pass);
 
                 // Agregar la imagen si se seleccionó
                 if (imageUri != null) {
-                    File file = new File(imageUri.getPath());
-                    formBodyContent += "&image=" + file.getName();
+                    // Obtiene el InputStream directamente sin necesidad de obtener la ruta
+                    InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                    byte[] imageBytes = getBytes(inputStream);  // Opcional: Si necesitas los bytes
+                    RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
+                    bodyBuilder.addFormDataPart("image", "image.jpg", imageRequestBody);
                 }
 
                 // Crea el request body
-                RequestBody requestBody = RequestBody.create(formBodyContent, MediaType.parse("application/x-www-form-urlencoded"));
+                RequestBody requestBody = bodyBuilder.build();
 
                 Request request = new Request.Builder()
                         .url("http://10.0.2.2:8080/v1/insert-maestro")
@@ -157,6 +166,31 @@ public class RegistroMaestro extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al procesar la solicitud", Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+
+    // Obtiene la ruta real del archivo desde la URI (para algunos dispositivos)
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        assert cursor != null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
+
+    // Convierte un InputStream en un arreglo de bytes
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
         @Override
         protected void onDestroy() {
