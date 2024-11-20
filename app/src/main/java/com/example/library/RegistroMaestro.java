@@ -91,9 +91,9 @@ public class RegistroMaestro extends AppCompatActivity {
     }
 
     private void sendFormData() {
-        EditText etName = findViewById(R.id.editNomMaestro);
+        EditText etName = findViewById(R.id.editNombre);
         EditText etPhone = findViewById(R.id.editTlfMaestro);
-        EditText etExperience = findViewById(R.id.editExperiencia);
+        EditText etExperience = findViewById(R.id.editSexo);
         EditText etTiempoCampo = findViewById(R.id.editExperienciaCamp);
         EditText etEmail = findViewById(R.id.editCorreoMaestro);
         EditText etPass = findViewById(R.id.editClaveMaestro);

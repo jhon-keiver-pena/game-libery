@@ -34,9 +34,9 @@ public class Registro extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
         // Inicialización de los campos
-        editNombre = findViewById(R.id.editNomMaestro);
+        editNombre = findViewById(R.id.editNombre);
         editApellido = findViewById(R.id.editTlfMaestro);
-        editTelefono = findViewById(R.id.editExperiencia);
+        editTelefono = findViewById(R.id.editSexo);
         editCorreo = findViewById(R.id.editCorreoMaestro);
         editClave = findViewById(R.id.editClaveMaestro);
         btnCrear = findViewById(R.id.btn_crear_maestro);
