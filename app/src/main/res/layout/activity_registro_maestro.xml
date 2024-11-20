@@ -25,22 +25,20 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:text="Registro Maestro"
                 android:textColor="#000000"
                 android:textSize="34sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/editNomMaestro"
+                app:layout_constraintBottom_toTopOf="@+id/editNombre"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editNomMaestro"
+                android:id="@+id/editNombre"
                 android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="1dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
                 android:hint="Nombre"
                 android:inputType="text"
@@ -52,15 +50,13 @@
                 app:layout_constraintBottom_toTopOf="@+id/editTlfMaestro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editTlfMaestro"
                 android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
                 android:hint="Telefono"
                 android:inputType="text"
@@ -69,36 +65,77 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                app:layout_constraintBottom_toTopOf="@+id/editExperiencia"
+                app:layout_constraintBottom_toTopOf="@+id/editSexo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editNomMaestro" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
-                android:id="@+id/editExperiencia"
+                android:id="@+id/editSexo"
                 android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginBottom="12dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Experiencia"
+                android:hint="Sexo"
                 android:inputType="textMultiLine"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
+                app:layout_constraintBottom_toTopOf="@+id/editEdad"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/editEdad"
+                android:layout_width="295dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Edad"
                 app:layout_constraintBottom_toTopOf="@+id/editExperienciaCamp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTlfMaestro" />
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/editExperienciaCamp"
+                android:layout_width="295dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:hint="Experiencia Campo"
+                android:inputType="text"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                app:layout_constraintBottom_toTopOf="@+id/editDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/editDate"
+                android:layout_width="295dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:hint="Tiempo Experiencia"
+                android:inputType="date"
+                android:textColor="#000000"
+                android:textColorHighlight="#000000"
+                android:textColorHint="#000000"
+                android:textColorLink="#000000"
+                app:layout_constraintBottom_toTopOf="@+id/editCorreoMaestro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editCorreoMaestro"
                 android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="12dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
                 android:hint="Correo"
                 android:inputType="textEmailAddress"
@@ -110,14 +147,13 @@
                 app:layout_constraintBottom_toTopOf="@+id/editClaveMaestro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editExperienciaCamp" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editClaveMaestro"
                 android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginBottom="15dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
@@ -125,100 +161,84 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
+                app:layout_constraintBottom_toTopOf="@+id/spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="295dp"
+                android:layout_height="31dp"
+                android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/btn_select_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editCorreoMaestro" />
-
-            <Button
-                android:id="@+id/btn_crear_maestro"
-                android:layout_width="145dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/background_btn_ok"
-                android:text="Crear cuenta"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.921"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="65dp"
-                android:text="Ya tienes una cuenta?"
-                android:textColor="#FDFDFD"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.215"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_select_image" />
-
-            <Button
-                android:id="@+id/btn_ir_inicio"
-                android:layout_width="145dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/background_btn_principal"
-                android:text="Iniciar Sesion"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.136"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/btn_select_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="1dp"
-                android:text="Seleccionar Imagen"
+                android:layout_marginBottom="12dp"
+                android:text="Imagen..."
                 app:layout_constraintBottom_toTopOf="@+id/textView5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.117"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editClaveMaestro" />
+                app:layout_constraintEnd_toStartOf="@+id/iv_selected_image"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_selected_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginStart="23dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="27dp"
-                android:layout_marginBottom="84dp"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="Imagen seleccionada"
                 android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/btn_crear_maestro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.828"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="106dp"
+                android:layout_height="37dp"
+                android:layout_marginBottom="16dp"
+                android:text="Ya tienes una cuenta?"
+                android:textAlignment="center"
+                android:textColor="#FDFDFD"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_ir_inicio"
+                app:layout_constraintEnd_toStartOf="@+id/iv_selected_image"
+                app:layout_constraintHorizontal_bias="0.397"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btn_ir_inicio"
+                android:layout_width="100dp"
+                android:layout_height="51dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/background_btn_principal"
+                android:text="Iniciar Sesion"
+                android:textColor="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_crear_maestro"
+                app:layout_constraintHorizontal_bias="0.401"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btn_crear_maestro"
+                android:layout_width="100dp"
+                android:layout_height="51dp"
+                android:background="@drawable/background_btn_ok"
+                android:text="Crear cuenta"
+                android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/btn_select_image"
-                app:layout_constraintTop_toBottomOf="@+id/editClaveMaestro" />
-
-            <EditText
-                android:id="@+id/editExperienciaCamp"
-                android:layout_width="295dp"
-                android:layout_height="53dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="27dp"
-                android:layout_marginBottom="9dp"
-                android:ems="10"
-                android:hint="Experiencia Campo"
-                android:inputType="text"
-                app:layout_constraintBottom_toTopOf="@+id/editCorreoMaestro"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.828"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editExperiencia" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.988" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

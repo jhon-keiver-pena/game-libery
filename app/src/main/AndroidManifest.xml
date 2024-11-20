@@ -19,6 +19,12 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
+            android:name=".editar_maestro"
+            android:exported="false" />
+        <activity
+            android:name=".editar_usuario"
+            android:exported="false" />
+        <activity
             android:name="com.example.library.RegistroMaestro"
             android:exported="false" />
         <activity
