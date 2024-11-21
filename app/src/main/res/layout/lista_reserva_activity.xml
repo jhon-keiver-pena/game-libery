@@ -11,8 +11,8 @@ tools:context="com.example.library.ListaReservaActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="413dp"
-        android:layout_height="635dp"
+        android:layout_width="416dp"
+        android:layout_height="652dp"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,15 +26,41 @@ tools:context="com.example.library.ListaReservaActivity">
 
             <ListView
                 android:id="@+id/listViewReservas"
-                android:layout_width="402dp"
-                android:layout_height="633dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="4dp"
+                android:layout_width="399dp"
+                android:layout_height="582dp"
                 android:background="@drawable/gradient_bienvenida"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.529"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.971" />
+
+            <CheckBox
+                android:id="@+id/check_activas"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:text="ACTIVAS"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/listViewReservas"
+                app:layout_constraintEnd_toStartOf="@+id/check_canceladas"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/check_canceladas"
+                android:layout_width="170dp"
+                android:layout_height="40dp"
+                android:text="CANCELADAS"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/listViewReservas"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.845"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

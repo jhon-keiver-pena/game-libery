@@ -25,95 +25,138 @@
                 android:id="@+id/imageView2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:srcCompat="@android:drawable/ic_menu_add"
-                tools:layout_editor_absoluteX="113dp"
-                tools:layout_editor_absoluteY="16dp" />
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/editNombre"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_add" />
 
             <EditText
                 android:id="@+id/editNombre"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:inputType="text"
                 android:text="Nombre"
-                tools:layout_editor_absoluteX="38dp"
-                tools:layout_editor_absoluteY="160dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editPhone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editPhone"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Telefono"
                 android:inputType="phone"
                 android:textColorHint="#000000"
-                tools:layout_editor_absoluteX="40dp"
-                tools:layout_editor_absoluteY="221dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editSexo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editSexo"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:inputType="text"
                 android:text="Sexo"
-                tools:layout_editor_absoluteX="26dp"
-                tools:layout_editor_absoluteY="285dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editEdad"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editEdad"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:inputType="text"
                 android:text="Edad"
-                tools:layout_editor_absoluteX="23dp"
-                tools:layout_editor_absoluteY="334dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editExperiencia"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editExperiencia"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="Experiencia"
                 android:inputType="textMultiLine"
                 android:textColorHint="#000000"
-                tools:layout_editor_absoluteX="26dp"
-                tools:layout_editor_absoluteY="389dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editTiempoExperiencia"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editTiempoExperiencia"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Tiempo Experiencia"
                 android:inputType="date"
                 android:textColorHint="#000000"
-                tools:layout_editor_absoluteX="26dp"
-                tools:layout_editor_absoluteY="446dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editEmail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editEmail"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Correo"
                 android:inputType="textEmailAddress"
                 android:textColorHint="#000000"
-                tools:layout_editor_absoluteX="26dp"
-                tools:layout_editor_absoluteY="508dp" />
+                app:layout_constraintBottom_toTopOf="@+id/editPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editPassword"
                 android:layout_width="295dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
                 android:textColorHint="#000000"
-                tools:layout_editor_absoluteX="23dp"
-                tools:layout_editor_absoluteY="575dp" />
+                app:layout_constraintBottom_toTopOf="@+id/btt_guardar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btt_guardar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/background_btn_ok"
+                android:text="Guardar"
+                app:layout_constraintBottom_toTopOf="@+id/btt_eliminar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btt_eliminar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_btn_cerrar"
+                android:text="Eliminar cuenta"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.973" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
