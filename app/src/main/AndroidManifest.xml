@@ -19,6 +19,9 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
+            android:name=".lista_reserva_maestro"
+            android:exported="false" />
+        <activity
             android:name=".editar_maestro"
             android:exported="false" />
         <activity
