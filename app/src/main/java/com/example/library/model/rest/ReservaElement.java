@@ -8,6 +8,7 @@ public class ReservaElement {
     private double coste;
     private String ciudad;
     private int idUsuario; // Foreign key
+    private int estado;
 
     public int getIdReserva() {
         return idReserva;
@@ -55,5 +56,14 @@ public class ReservaElement {
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    // Getter y setter para 'estado' (tipo int)
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
     }
 }

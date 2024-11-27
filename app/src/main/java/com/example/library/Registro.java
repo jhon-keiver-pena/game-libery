@@ -78,7 +78,7 @@ public class Registro extends AppCompatActivity {
             String response;
             try {
                 // URL de la API
-                URL url = new URL("http://10.0.2.2:80/app-mobile/usuarios_api.php");
+                URL url = new URL("https://ms-usuarios-1078682117753.us-central1.run.app/v1/insert-usuario");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 // Configurar la conexión

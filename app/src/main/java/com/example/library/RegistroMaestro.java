@@ -6,9 +6,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +25,7 @@ import com.example.gamelibery.R;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,45 +38,97 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsCompat.Type;
+import okhttp3.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class RegistroMaestro extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView ivSelectedImage;
     private Uri imageUri;
-
-    //Inicio Variables que deben sustituirse por los elementos de la vista
-    private String sexo = "M";
-    private String edad = "56";
-    private String idCategoria = "1";
-    //Fin Variables que deben sustituirse por los elementos de la vista
+    private String selectedCategoryId; // ID de la categoría seleccionada
 
     private ExecutorService executorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro_maestro);
 
-        executorService = Executors.newSingleThreadExecutor(); // Executor para manejo de tareas en background
+        executorService = Executors.newSingleThreadExecutor();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets systemBars = insets.getInsets(Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
         Button btnSelectImage = findViewById(R.id.btn_select_image);
         Button btnCrearMaestro = findViewById(R.id.btn_crear_maestro);
+        Button btnIrLogin = findViewById(R.id.btn_ir_inicio);
+        Spinner spinner = findViewById(R.id.spinner);
         ivSelectedImage = findViewById(R.id.iv_selected_image);
+
+        String[] categorias = {"Electricista", "Plomero", "Carpintero", "Albañil", "Pintor", "Soldador", "Jardinero", "Mecánico"};
+
+        // Mapeo de categorías a IDs
+        HashMap<String, String> categoriaMap = new HashMap<>();
+        categoriaMap.put("Electricista", "1");
+        categoriaMap.put("Plomero", "2");
+        categoriaMap.put("Carpintero", "3");
+        categoriaMap.put("Albañil", "4");
+        categoriaMap.put("Pintor", "5");
+        categoriaMap.put("Soldador", "6");
+        categoriaMap.put("Jardinero", "7");
+        categoriaMap.put("Mecánico", "8");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorias);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        // Asignar el ID de la categoría seleccionada al cambiar el Spinner
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = categorias[position];
+                selectedCategoryId = categoriaMap.get(selectedCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedCategoryId = null; // Ninguna categoría seleccionada
+            }
+        });
 
         btnSelectImage.setOnClickListener(v -> openFileChooser());
         btnCrearMaestro.setOnClickListener(v -> sendFormData());
+        btnIrLogin.setOnClickListener(v -> goLogin());
     }
 
-    // Método para abrir el selector de archivos
+    private void goLogin() {
+        Intent intent = new Intent(getBaseContext(), Login.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");  // Solo imágenes
+        intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
@@ -93,20 +149,51 @@ public class RegistroMaestro extends AppCompatActivity {
     private void sendFormData() {
         EditText etName = findViewById(R.id.editNombre);
         EditText etPhone = findViewById(R.id.editTlfMaestro);
-        EditText etExperience = findViewById(R.id.editSexo);
-        EditText etTiempoCampo = findViewById(R.id.editExperienciaCamp);
+        EditText etSexo = findViewById(R.id.editSexo);
+        EditText etEdad = findViewById(R.id.editEdad);
+        EditText etExperience = findViewById(R.id.editExperienciaCamp);
+        EditText etTiempoCampo = findViewById(R.id.editDate);
         EditText etEmail = findViewById(R.id.editCorreoMaestro);
         EditText etPass = findViewById(R.id.editClaveMaestro);
 
         String name = etName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
+        String sexo = etSexo.getText().toString().trim().toUpperCase();
+        String edadStr = etEdad.getText().toString().trim();
         String experience = etExperience.getText().toString().trim();
         String tiempoCampo = etTiempoCampo.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String pass = etPass.getText().toString().trim();
 
-        if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || pass.isEmpty()) {
             Toast.makeText(this, "Por favor complete todos los campos obligatorios", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int edad;
+        try {
+            edad = Integer.parseInt(edadStr);
+            if (edad <= 0) {
+                Toast.makeText(this, "La edad debe ser mayor a 0", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "La edad debe ser un número válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!sexo.equals("M") && !sexo.equals("F")) {
+            Toast.makeText(this, "El sexo debe ser 'M' o 'F'", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!tiempoCampo.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            Toast.makeText(this, "La fecha debe estar en formato yyyy-MM-dd", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedCategoryId == null) {
+            Toast.makeText(this, "Por favor seleccione una categoría", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -114,29 +201,25 @@ public class RegistroMaestro extends AppCompatActivity {
             try {
                 OkHttpClient client = new OkHttpClient();
 
-                // Crea el cuerpo del formulario con multipart/form-data
                 MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("id_categoria", idCategoria)
+                        .addFormDataPart("id_categoria", selectedCategoryId)
                         .addFormDataPart("nombre", name)
                         .addFormDataPart("telefono", phone)
-                        .addFormDataPart("edad", edad)
+                        .addFormDataPart("edad", String.valueOf(edad))
                         .addFormDataPart("sexo", sexo)
                         .addFormDataPart("experiencia", experience)
                         .addFormDataPart("tiempo_campo", tiempoCampo)
                         .addFormDataPart("correo", email)
                         .addFormDataPart("clave", pass);
 
-                // Agregar la imagen si se seleccionó
                 if (imageUri != null) {
-                    // Obtiene el InputStream directamente sin necesidad de obtener la ruta
                     InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                    byte[] imageBytes = getBytes(inputStream);  // Opcional: Si necesitas los bytes
+                    byte[] imageBytes = getBytes(inputStream);
                     RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageBytes);
                     bodyBuilder.addFormDataPart("image", "image.jpg", imageRequestBody);
                 }
 
-                // Crea el request body
                 RequestBody requestBody = bodyBuilder.build();
 
                 Request request = new Request.Builder()
@@ -144,7 +227,6 @@ public class RegistroMaestro extends AppCompatActivity {
                         .post(requestBody)
                         .build();
 
-                // Realiza la solicitud HTTP en un hilo de fondo
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -162,28 +244,12 @@ public class RegistroMaestro extends AppCompatActivity {
                         });
                     }
                 });
-
             } catch (Exception e) {
                 runOnUiThread(() -> Toast.makeText(RegistroMaestro.this, "Error al procesar la solicitud", Toast.LENGTH_SHORT).show());
             }
         });
     }
 
-
-    // Obtiene la ruta real del archivo desde la URI (para algunos dispositivos)
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        assert cursor != null;
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
-    }
-
-
-    // Convierte un InputStream en un arreglo de bytes
     private byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -193,12 +259,13 @@ public class RegistroMaestro extends AppCompatActivity {
         }
         return byteArrayOutputStream.toByteArray();
     }
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            // Limpiar el ExecutorService
-            if (executorService != null && !executorService.isShutdown()) {
-                executorService.shutdown();
-            }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 }
+
