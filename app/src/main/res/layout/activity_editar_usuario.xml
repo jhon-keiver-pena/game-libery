@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bienvenida"
-    tools:context=".editar_usuario">
+    tools:context="com.example.library.EditarUsuario">
 
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"

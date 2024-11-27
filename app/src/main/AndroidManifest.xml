@@ -19,13 +19,19 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
-            android:name=".lista_reserva_maestro"
+            android:name="com.example.library.service.ejemplo"
             android:exported="false" />
         <activity
-            android:name=".editar_maestro"
+            android:name="com.example.library.DetalleReserva"
             android:exported="false" />
         <activity
-            android:name=".editar_usuario"
+            android:name="com.example.library.lista_reserva_maestro"
+            android:exported="false" />
+        <activity
+            android:name="com.example.library.EditarMaestro"
+            android:exported="false" />
+        <activity
+            android:name="com.example.library.EditarUsuario"
             android:exported="false" />
         <activity
             android:name="com.example.library.RegistroMaestro"

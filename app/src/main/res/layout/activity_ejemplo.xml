@@ -5,23 +5,22 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_bienvenida"
-    tools:context="com.example.library.RegistroMaestro">
+    tools:context="com.example.library.service.ejemplo">
 
     <ScrollView
-        android:layout_width="354dp"
-        android:layout_height="844dp"
+        android:layout_width="345dp"
+        android:layout_height="1319dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.42">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            app:cardBackgroundColor="@android:color/transparent">
+            android:layout_height="20dp">
 
             <ScrollView
                 android:layout_width="339dp"
@@ -39,17 +38,16 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="24dp"
                         android:text="Registro Maestro"
                         android:textColor="#000000"
                         android:textSize="34sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/textView9"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.493"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.467" />
+                        app:layout_constraintVertical_bias="1.0" />
 
                     <TextView
                         android:id="@+id/textView9"
@@ -412,10 +410,4 @@
             </ScrollView>
         </androidx.cardview.widget.CardView>
     </ScrollView>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="left" />
 </androidx.constraintlayout.widget.ConstraintLayout>
