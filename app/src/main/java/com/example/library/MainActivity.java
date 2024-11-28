@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     //declaracion de variable
     private Button inicio;
     private Button registrar;
+    private Button registromaestro;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         //llamada por id
         inicio = findViewById(R.id.btn_ir_inicio);
         registrar = findViewById(R.id.btn_Home);
+        registromaestro = findViewById(R.id.btn_r_maestro);
 
         //funcionalidad de los botones
         inicio.setOnClickListener(new View.OnClickListener() {
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //redirige a un activity
                 Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        registromaestro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //redirige a un activity
+                Intent intent = new Intent(getBaseContext(), RegistroMaestro.class);
                 startActivity(intent);
                 finish();
             }

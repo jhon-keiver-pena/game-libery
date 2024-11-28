@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.gamelibery.R;
 import com.example.library.service.UserService;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,6 +27,7 @@ public class Login extends AppCompatActivity {
 
     private EditText usuario, contraseña;
     private Button buttonini, buttonregis;
+    private RadioButton rdUsuario, rdMaestro;
     private ExecutorService executor;
 
     @Override
@@ -39,43 +42,147 @@ public class Login extends AppCompatActivity {
         usuario = findViewById(R.id.input_mail);
         contraseña = findViewById(R.id.input_password);
         buttonini = findViewById(R.id.btn_inicio);
-        buttonregis = findViewById(R.id.btn_crear);
+        buttonregis = findViewById(R.id.btn_crear_maestro);
+        rdUsuario = findViewById(R.id.rd_usuario);
+        rdMaestro = findViewById(R.id.rd_maestro);
 
         buttonini.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Obtenemos los valores de usuario y contraseña
+                String correo = usuario.getText().toString().trim();
+                String clave = contraseña.getText().toString().trim();
 
-                String correo=usuario.getText().toString();
-                String clave=contraseña.getText().toString();
-
-                if(correo.equals("") || clave.equals("")){
-                    Toast.makeText(Login.this,"Los datos no estan completos...",Toast.LENGTH_SHORT).show();
-                    usuario.requestFocus();     //para que el cursor aparezca en usuario
-                }
-                else
-                {
-                    validateData(correo,clave);
+                // Validamos que los campos no estén vacíos
+                if (correo.isEmpty() || clave.isEmpty()) {
+                    Toast.makeText(Login.this, "Los datos no están completos...", Toast.LENGTH_SHORT).show();
+                    usuario.requestFocus(); // Enfocar en el campo usuario
+                    return;
                 }
 
+                if (rdUsuario.isChecked()) {
+
+                    rdMaestro.setChecked(false);
+
+                    validateData(correo, clave);
+
+                    rdUsuario.setChecked(false);
+
+                } else if (rdMaestro.isChecked()) {
+
+                    rdUsuario.setChecked(false);
+
+                    validateDataMaestro(correo, clave);
+
+                    rdMaestro.setChecked(false);
+
+                } else {
+
+                    Toast.makeText(Login.this, "Seleccione si es maestro o usuario...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         buttonregis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), Registro.class);
-                startActivity(intent);
-                finish();
+
+                if(rdUsuario.isChecked()){
+                    Intent intent = new Intent(getBaseContext(), Registro.class);
+                    startActivity(intent);
+                    finish();
+                } else if (rdMaestro.isChecked()) {
+                    Intent intent = new Intent(getBaseContext(), RegistroMaestro.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Toast.makeText(Login.this,"Seleccione la cuenta que desea registrar...", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
     }
+
+    private void validateDataMaestro(String correo, String clave) {
+        executor.execute(() -> {
+            String response = "";
+            try {
+                // URL de la API para obtener todos los maestros
+                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                // Configurar la conexión
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                httpURLConnection.setDoInput(true);
+
+                int responseCode = httpURLConnection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Leer la respuesta
+                    StringBuilder responseBuilder = new StringBuilder();
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()))) {
+                        String inputLine;
+                        while ((inputLine = in.readLine()) != null) {
+                            responseBuilder.append(inputLine);
+                        }
+                    }
+
+                    // Convertir la respuesta en un array JSON
+                    JSONArray maestrosArray = new JSONArray(responseBuilder.toString());
+                    boolean isValid = false;
+
+                    // Buscar el maestro con las credenciales proporcionadas
+                    for (int i = 0; i < maestrosArray.length(); i++) {
+                        JSONObject maestro = maestrosArray.getJSONObject(i);
+                        String maestroCorreo = maestro.getString("correo"); // Cambiar "correo" según el campo real
+                        String maestroClave = maestro.getString("clave");   // Cambiar "clave" según el campo real
+
+                        if (maestroCorreo.equals(correo) && maestroClave.equals(clave)) {
+                            isValid = true;
+
+                            // Guardar información del maestro en UserService
+                            UserService userService = (UserService) getApplicationContext();
+                            userService.getUsuario().setIdUsuario(maestro.getInt("id_maestro"));
+                            userService.getUsuario().setNombre(maestro.getString("nombre"));
+                            userService.getUsuario().setCorreo(maestroCorreo);
+                            userService.getUsuario().setClave(maestroClave);
+                            userService.getUsuario().setLogin(true);
+
+                            // Redirigir al Home
+                            Intent intent = new Intent(getBaseContext(), Home.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        }
+                    }
+
+                    if (!isValid) {
+                        response = "Credenciales inválidas";
+                    }
+                } else {
+                    response = "Error al conectar con el servidor. Código: " + responseCode;
+                }
+
+                httpURLConnection.disconnect();
+            } catch (Exception e) {
+                response = "Error: " + e.getMessage();
+            }
+
+            // Mostrar el mensaje en un Toast (debe ejecutarse en el hilo principal)
+            String finalResponseMessage = response;
+            runOnUiThread(() -> Toast.makeText(Login.this, finalResponseMessage, Toast.LENGTH_LONG).show());
+        });
+    }
+
+
     private void validateData(String correo, String clave) {
         executor.execute(() -> {
             String response = "";
             try {
-                // URL de la API con los parámetros de consulta
-                URL url = new URL("http://10.0.2.2:80/app-mobile/usuarios_api.php?correo=" + correo + "&clave=" + clave);
+                // Integracion api python en Nube
+                URL url = new URL("https://ms-usuarios-1078682117753.us-central1.run.app/v1/get-usuario-by-credentials?correo="
+                        + correo + "&clave=" + clave);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 // Configurar la conexión

@@ -35,11 +35,11 @@ public class Registro extends AppCompatActivity {
 
         // Inicialización de los campos
         editNombre = findViewById(R.id.editNombre);
-        editApellido = findViewById(R.id.editApellido);
-        editTelefono = findViewById(R.id.editTelefono);
-        editCorreo = findViewById(R.id.editCorreo);
-        editClave = findViewById(R.id.editClave);
-        btnCrear = findViewById(R.id.btn_crear);
+        editApellido = findViewById(R.id.editTlfMaestro);
+        editTelefono = findViewById(R.id.editSexo);
+        editCorreo = findViewById(R.id.editCorreoMaestro);
+        editClave = findViewById(R.id.editClaveMaestro);
+        btnCrear = findViewById(R.id.btn_crear_maestro);
         btnInicio = findViewById(R.id.btn_ir_inicio);
 
         // Inicializar el ExecutorService
@@ -78,7 +78,7 @@ public class Registro extends AppCompatActivity {
             String response;
             try {
                 // URL de la API
-                URL url = new URL("http://10.0.2.2:80/app-mobile/usuarios_api.php");
+                URL url = new URL("https://ms-usuarios-1078682117753.us-central1.run.app/v1/insert-usuario");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 // Configurar la conexión

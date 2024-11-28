@@ -39,16 +39,17 @@ public class Reserva extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Validar si esta logeado
+
+        // Validar si el usuario está logeado
         UserService userService = (UserService) getApplicationContext();
-        if (!userService.getUsuario().isLogin()){
-            Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
+        if (!userService.getUsuario().isLogin()) {
+            Toast.makeText(this, "Debes iniciar sesión para acceder a esta pantalla",
                     Toast.LENGTH_SHORT).show();
-            //redirige a un activity
             Intent intent = new Intent(getBaseContext(), Login.class);
             startActivity(intent);
             finish();
         }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reserva);
 
@@ -57,77 +58,52 @@ public class Reserva extends AppCompatActivity {
         volverHome = findViewById(R.id.btnVHome);
         volverCotizar = findViewById(R.id.btn_VCotizar);
 
-        // Obtener los datos pasados desde Cotizar
         Intent intent = getIntent();
         String comunaSeleccionada = intent.getStringExtra("comuna");
         String diaSeleccionado = intent.getStringExtra("dia");
         double valorCotizacion = intent.getDoubleExtra("valor_cotizacion", 0);
 
-        // mostramos los datos en el txt
         info.setText("Comuna: " + comunaSeleccionada + "\nDía: " + diaSeleccionado + "\nValor: $" + valorCotizacion);
 
         executor = Executors.newSingleThreadExecutor();
 
-        volverHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), Home.class);
-                startActivity(intent);
-                finish();
-            }
+        volverHome.setOnClickListener(view -> {
+            Intent homeIntent = new Intent(getBaseContext(), Home.class);
+            startActivity(homeIntent);
+            finish();
         });
 
-        volverCotizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), Cotizar.class);
-                startActivity(intent);
-                finish();
-            }
+        volverCotizar.setOnClickListener(view -> {
+            Intent cotizarIntent = new Intent(getBaseContext(), Cotizar.class);
+            startActivity(cotizarIntent);
+            finish();
         });
 
-        confirmar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                realizarReserva();
-            }
-        });
+        confirmar.setOnClickListener(view -> realizarReserva());
     }
 
     private void realizarReserva() {
-        // Obtener el id del maestro y del usuario
         Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");
         int idMaestro = maestro != null ? maestro.getId() : -1;
 
         UserService userService = (UserService) getApplicationContext();
         int idUsuario = userService.getUsuario().getIdUsuario();
 
-        // Obtener los datos que fueron pasados desde Cotizar
         String comunaSeleccionada = getIntent().getStringExtra("comuna");
         String diaSeleccionado = getIntent().getStringExtra("dia");
         double valorCotizacion = getIntent().getDoubleExtra("valor_cotizacion", 0.0);
 
-        //mostrar datos validacion en logcat
-        Log.d("Reserva", "idMaestro: " + idMaestro);
-        Log.d("Reserva", "comunaSeleccionada: " + comunaSeleccionada);
-        Log.d("Reserva", "diaSeleccionado: " + diaSeleccionado);
-        Log.d("Reserva", "idUsuario: " + idUsuario);
-        Log.d("Reserva", "valorCotizacion: " + valorCotizacion);
-
-        // Validar que los datos estén correctos
         if (idMaestro == -1 || comunaSeleccionada.isEmpty() || diaSeleccionado.isEmpty() || idUsuario == -1) {
             Toast.makeText(Reserva.this, "Datos inválidos para realizar la reserva", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Obtener la fecha en formato "YYYY-MM-DD" a partir del nombre del día
         String fechaVisita = obtenerFechaPorNombreDia(diaSeleccionado);
         if (fechaVisita == null) {
             Toast.makeText(this, "Error al obtener la fecha", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Crear el JSON con los datos de la reserva
         JSONObject reservaJSON = new JSONObject();
         try {
             reservaJSON.put("id_maestro", idMaestro);
@@ -135,114 +111,86 @@ public class Reserva extends AppCompatActivity {
             reservaJSON.put("coste", valorCotizacion);
             reservaJSON.put("ciudad", comunaSeleccionada);
             reservaJSON.put("id_usuario", idUsuario);
+            reservaJSON.put("id_estado", 1); // Estado inicial de la reserva
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(Reserva.this, "Error al generar la reserva", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Enviar la reserva al servidor (como te expliqué anteriormente)
         sendReservation(reservaJSON);
     }
 
     private String obtenerFechaPorNombreDia(String diaNombre) {
-        // Mapa de nombres de días a números
-        int diaDeseado = -1;
-
+        int diaDeseado;
         switch (diaNombre.toLowerCase()) {
-            case "domingo":
-                diaDeseado = Calendar.SUNDAY;
-                break;
-            case "lunes":
-                diaDeseado = Calendar.MONDAY;
-                break;
-            case "martes":
-                diaDeseado = Calendar.TUESDAY;
-                break;
-            case "miercoles":
-                diaDeseado = Calendar.WEDNESDAY;
-                break;
-            case "jueves":
-                diaDeseado = Calendar.THURSDAY;
-                break;
-            case "viernes":
-                diaDeseado = Calendar.FRIDAY;
-                break;
-            case "sabado":
-                diaDeseado = Calendar.SATURDAY;
-                break;
-            default:
-                return null; // Día inválido
+            case "domingo": diaDeseado = Calendar.SUNDAY; break;
+            case "lunes": diaDeseado = Calendar.MONDAY; break;
+            case "martes": diaDeseado = Calendar.TUESDAY; break;
+            case "miercoles": diaDeseado = Calendar.WEDNESDAY; break;
+            case "jueves": diaDeseado = Calendar.THURSDAY; break;
+            case "viernes": diaDeseado = Calendar.FRIDAY; break;
+            case "sabado": diaDeseado = Calendar.SATURDAY; break;
+            default: return null;
         }
 
-        // Obtener el día actual
         Calendar calendar = Calendar.getInstance();
         int diaActual = calendar.get(Calendar.DAY_OF_WEEK);
         int diasHastaProximo = (diaDeseado - diaActual + 7) % 7;
 
-        Log.d("diaActual", ":" + diaActual);
-        Log.d("diaDeseado", ": " + diaDeseado);
-        Log.d("diaHastaProximo", ":" + diasHastaProximo);
-
-
-        // Si hoy es el día deseado, obtenemos la fecha para la próxima semana
         if (diasHastaProximo == 0) {
-            diasHastaProximo = 7; // Obtener el próximo día deseado
+            diasHastaProximo = 7;
         }
 
         calendar.add(Calendar.DAY_OF_MONTH, diasHastaProximo);
 
-        // Formatear la fecha
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        calendar.set(Calendar.HOUR_OF_DAY, 17); // Hora predeterminada
+        calendar.set(Calendar.MINUTE, 30);     // Minutos predeterminados
+        calendar.set(Calendar.SECOND, 0);      // Segundos predeterminados
         return sdf.format(calendar.getTime());
     }
 
     private void sendReservation(JSONObject reservaJSON) {
         executor.execute(() -> {
-            String response;
             try {
-                URL url = new URL("http://10.0.2.2:80/app-mobile/reserva_api.php");
+                URL url = new URL("https://ms-reserva-1078682117753.us-central1.run.app/v1/reservas");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
                 httpURLConnection.setDoOutput(true);
 
-                // Enviar el JSON al servidor
-                OutputStream os = httpURLConnection.getOutputStream();
-                os.write(reservaJSON.toString().getBytes(StandardCharsets.UTF_8));
-                os.flush();
-                os.close();
+                try (OutputStream os = httpURLConnection.getOutputStream()) {
+                    os.write(reservaJSON.toString().getBytes(StandardCharsets.UTF_8));
+                    os.flush();
+                }
 
                 int responseCode = httpURLConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_CREATED) {
-                    response = "Reserva realizada con éxito";
-                    String finalResponse = response;
                     runOnUiThread(() -> {
-                        Toast.makeText(Reserva.this, finalResponse, Toast.LENGTH_LONG).show();
-                        // Redirigir si es necesario
+                        Toast.makeText(Reserva.this, "Reserva realizada con éxito", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getBaseContext(), Home.class);
                         startActivity(intent);
                         finish();
                     });
                 } else {
                     InputStream errorStream = httpURLConnection.getErrorStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(errorStream));
-                    StringBuilder errorResponse = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        errorResponse.append(line);
+                    String errorResponse = "";
+                    if (errorStream != null) {
+                        errorResponse = new BufferedReader(new InputStreamReader(errorStream))
+                                .lines()
+                                .reduce("", (acc, line) -> acc + line);
+                    } else {
+                        errorResponse = "No se pudo procesar el error del servidor.";
                     }
-                    response = "Error en la reserva: " + errorResponse.toString();
-                    String finalResponse1 = response;
-                    runOnUiThread(() -> Toast.makeText(Reserva.this, finalResponse1, Toast.LENGTH_LONG).show());
+                    String finalErrorResponse = errorResponse;
+                    runOnUiThread(() -> Toast.makeText(Reserva.this, "Error: " + finalErrorResponse, Toast.LENGTH_LONG).show());
                 }
 
                 httpURLConnection.disconnect();
             } catch (Exception e) {
-                response = "Error: " + e.getMessage();
-                String finalResponse2 = response;
-                runOnUiThread(() -> Toast.makeText(Reserva.this, finalResponse2, Toast.LENGTH_LONG).show());
+                runOnUiThread(() -> Toast.makeText(Reserva.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
         });
     }
@@ -250,7 +198,7 @@ public class Reserva extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Limpiar el ExecutorService
         executor.shutdown();
     }
 }
+
