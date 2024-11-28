@@ -81,9 +81,17 @@ public class RegistroMaestro extends AppCompatActivity {
         Button btnSelectImage = findViewById(R.id.btn_select_image);
         Button btnCrearMaestro = findViewById(R.id.btn_crear_maestro);
         Button btnIrLogin = findViewById(R.id.btn_ir_inicio);
-        Spinner spinner = findViewById(R.id.spinner);
+        Spinner spinnerSexo = findViewById(R.id.spinner_sexo);
+        Spinner spinnerCategoria = findViewById(R.id.spinner_especialidad);
         ivSelectedImage = findViewById(R.id.iv_selected_image);
 
+        // Valores para el spinner de sexo
+        String[] sexos = {"M", "F"};
+        ArrayAdapter<String> adapterSexo = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sexos);
+        adapterSexo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSexo.setAdapter(adapterSexo);
+
+        // Valores para el spinner de categorías
         String[] categorias = {"Electricista", "Plomero", "Carpintero", "Albañil", "Pintor", "Soldador", "Jardinero", "Mecánico"};
 
         // Mapeo de categorías a IDs
@@ -97,12 +105,12 @@ public class RegistroMaestro extends AppCompatActivity {
         categoriaMap.put("Jardinero", "7");
         categoriaMap.put("Mecánico", "8");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorias);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> adapterCategoria = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categorias);
+        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategoria.setAdapter(adapterCategoria);
 
-        // Asignar el ID de la categoría seleccionada al cambiar el Spinner
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // Asignar el ID de la categoría seleccionada al cambiar el Spinner de categorías
+        spinnerCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCategory = categorias[position];
@@ -119,6 +127,7 @@ public class RegistroMaestro extends AppCompatActivity {
         btnCrearMaestro.setOnClickListener(v -> sendFormData());
         btnIrLogin.setOnClickListener(v -> goLogin());
     }
+
 
     private void goLogin() {
         Intent intent = new Intent(getBaseContext(), Login.class);
@@ -149,16 +158,16 @@ public class RegistroMaestro extends AppCompatActivity {
     private void sendFormData() {
         EditText etName = findViewById(R.id.editNombre);
         EditText etPhone = findViewById(R.id.editTlfMaestro);
-        EditText etSexo = findViewById(R.id.editSexo);
         EditText etEdad = findViewById(R.id.editEdad);
         EditText etExperience = findViewById(R.id.editExperienciaCamp);
         EditText etTiempoCampo = findViewById(R.id.editDate);
         EditText etEmail = findViewById(R.id.editCorreoMaestro);
         EditText etPass = findViewById(R.id.editClaveMaestro);
+        Spinner spinnerSexo = findViewById(R.id.spinner_sexo);
 
         String name = etName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
-        String sexo = etSexo.getText().toString().trim().toUpperCase();
+        String sexo = spinnerSexo.getSelectedItem().toString(); // Obtén el valor del Spinner
         String edadStr = etEdad.getText().toString().trim();
         String experience = etExperience.getText().toString().trim();
         String tiempoCampo = etTiempoCampo.getText().toString().trim();
@@ -179,11 +188,6 @@ public class RegistroMaestro extends AppCompatActivity {
             }
         } catch (NumberFormatException e) {
             Toast.makeText(this, "La edad debe ser un número válido", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!sexo.equals("M") && !sexo.equals("F")) {
-            Toast.makeText(this, "El sexo debe ser 'M' o 'F'", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -249,6 +253,7 @@ public class RegistroMaestro extends AppCompatActivity {
             }
         });
     }
+
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
