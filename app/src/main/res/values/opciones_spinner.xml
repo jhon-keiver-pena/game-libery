@@ -46,4 +46,12 @@
         <item>Sabado</item>
         <item>Domingo</item>
     </string-array>
+
+    <string-array name="estados">
+        <item>Confirmada</item>
+        <item>Cancelada</item>
+    </string-array>
+
+
+    <string name="icon">Icono del Spinner</string>
 </resources>

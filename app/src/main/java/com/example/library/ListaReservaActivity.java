@@ -71,6 +71,24 @@ public class ListaReservaActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, maestroInfoList);
         listViewReservas.setAdapter(adapter);
 
+        // Configurar el listener para los clics en los elementos del ListView
+        listViewReservas.setOnItemClickListener((parent, view, position, id) -> {
+            // Obtener el objeto `ReservaElement` correspondiente a la posición seleccionada
+            ReservaElement reservaSeleccionada = reservaElements.get(position);
+
+            // Crear un intent para abrir DetalleReserva y pasar los datos de la reserva
+            Intent intent = new Intent(ListaReservaActivity.this, DetalleReserva.class);
+            intent.putExtra("idReserva", reservaSeleccionada.getIdReserva());
+            intent.putExtra("fechaVisita", reservaSeleccionada.getFechaVisita());
+            intent.putExtra("ciudad", reservaSeleccionada.getCiudad());
+            intent.putExtra("coste", reservaSeleccionada.getCoste());
+            intent.putExtra("estado", reservaSeleccionada.getEstado());
+            intent.putExtra("idMaestro", reservaSeleccionada.getIdMaestro());
+
+            // Iniciar la actividad DetalleReserva
+            startActivity(intent);
+        });
+
         // Inicializar los CheckBox
         checkActivas = findViewById(R.id.check_activas);
         checkCanceladas = findViewById(R.id.check_canceladas);
