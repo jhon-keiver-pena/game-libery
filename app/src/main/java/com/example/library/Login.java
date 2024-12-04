@@ -1,14 +1,17 @@
 package com.example.library;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.gamelibery.R;
+import com.example.library.service.HomeMaestro;
 import com.example.library.service.UserService;
 
 import org.json.JSONArray;
@@ -24,84 +27,72 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Login extends AppCompatActivity {
-
     private EditText usuario, contraseña;
     private Button buttonini, buttonregis;
     private RadioButton rdUsuario, rdMaestro;
+    private RadioGroup rdGroup;
     private ExecutorService executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        EdgeToEdge.enable(this); // Si este método no es estándar, asegúrate de que esté funcionando correctamente.
         setContentView(R.layout.activity_login);
 
-        // Inicializar el ExecutorService
-        executor = Executors.newSingleThreadExecutor();
-
+        // Inicializar vistas después de setContentView
         usuario = findViewById(R.id.input_mail);
         contraseña = findViewById(R.id.input_password);
         buttonini = findViewById(R.id.btn_inicio);
         buttonregis = findViewById(R.id.btn_crear_maestro);
         rdUsuario = findViewById(R.id.rd_usuario);
         rdMaestro = findViewById(R.id.rd_maestro);
+        rdGroup = findViewById(R.id.radioGroup); // Inicializar correctamente el RadioGroup aquí.
 
+        // Inicializar el ExecutorService
+        executor = Executors.newSingleThreadExecutor();
+
+        // Configurar acciones para el botón de inicio
         buttonini.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Obtenemos los valores de usuario y contraseña
                 String correo = usuario.getText().toString().trim();
                 String clave = contraseña.getText().toString().trim();
 
-                // Validamos que los campos no estén vacíos
+                // Validar datos
                 if (correo.isEmpty() || clave.isEmpty()) {
                     Toast.makeText(Login.this, "Los datos no están completos...", Toast.LENGTH_SHORT).show();
-                    usuario.requestFocus(); // Enfocar en el campo usuario
+                    usuario.requestFocus();
                     return;
                 }
 
+                // Validar la selección del RadioButton
                 if (rdUsuario.isChecked()) {
-
-                    rdMaestro.setChecked(false);
-
                     validateData(correo, clave);
-
-                    rdUsuario.setChecked(false);
-
                 } else if (rdMaestro.isChecked()) {
-
-                    rdUsuario.setChecked(false);
-
                     validateDataMaestro(correo, clave);
-
-                    rdMaestro.setChecked(false);
-
                 } else {
-
                     Toast.makeText(Login.this, "Seleccione si es maestro o usuario...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        // Configurar acciones para el botón de registro
         buttonregis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int selectedId = rdGroup.getCheckedRadioButtonId();
 
-                if(rdUsuario.isChecked()){
-                    Intent intent = new Intent(getBaseContext(), Registro.class);
+                if (selectedId == R.id.rd_usuario) {
+                    Intent intent = new Intent(Login.this, Registro.class);
                     startActivity(intent);
-                    finish();
-                } else if (rdMaestro.isChecked()) {
-                    Intent intent = new Intent(getBaseContext(), RegistroMaestro.class);
+                } else if (selectedId == R.id.rd_maestro) {
+                    Intent intent = new Intent(Login.this, RegistroMaestro.class);
                     startActivity(intent);
-                    finish();
-                }else {
-                    Toast.makeText(Login.this,"Seleccione la cuenta que desea registrar...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Login.this, "Seleccione la cuenta que desea registrar...", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
     }
 
     private void validateDataMaestro(String correo, String clave) {
@@ -135,8 +126,8 @@ public class Login extends AppCompatActivity {
                     // Buscar el maestro con las credenciales proporcionadas
                     for (int i = 0; i < maestrosArray.length(); i++) {
                         JSONObject maestro = maestrosArray.getJSONObject(i);
-                        String maestroCorreo = maestro.getString("correo"); // Cambiar "correo" según el campo real
-                        String maestroClave = maestro.getString("clave");   // Cambiar "clave" según el campo real
+                        String maestroCorreo = maestro.getString("correo");
+                        String maestroClave = maestro.getString("clave");
 
                         if (maestroCorreo.equals(correo) && maestroClave.equals(clave)) {
                             isValid = true;
@@ -149,8 +140,14 @@ public class Login extends AppCompatActivity {
                             userService.getUsuario().setClave(maestroClave);
                             userService.getUsuario().setLogin(true);
 
+                            // Guardar en SharedPreferences
+                            SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("idMaestro", maestro.getInt("id_maestro"));
+                            editor.apply();
+
                             // Redirigir al Home
-                            Intent intent = new Intent(getBaseContext(), Home.class);
+                            Intent intent = new Intent(getBaseContext(), HomeMaestro.class);
                             startActivity(intent);
                             finish();
                             break;
@@ -174,6 +171,7 @@ public class Login extends AppCompatActivity {
             runOnUiThread(() -> Toast.makeText(Login.this, finalResponseMessage, Toast.LENGTH_LONG).show());
         });
     }
+
 
 
     private void validateData(String correo, String clave) {
@@ -215,6 +213,12 @@ public class Login extends AppCompatActivity {
                         userService.getUsuario().setClave(jsonResponse.getString("clave"));
                         userService.getUsuario().setLogin(true);
 
+                        // Guardar el idUsuario en SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("idUsuario", jsonResponse.getInt("id_usuario"));
+                        editor.apply();
+
                         // Redirige a un activity si el usuario es válido
                         Intent intent = new Intent(getBaseContext(), Home.class);
                         startActivity(intent);
@@ -236,6 +240,7 @@ public class Login extends AppCompatActivity {
             runOnUiThread(() -> Toast.makeText(Login.this, finalResponse, Toast.LENGTH_LONG).show());
         });
     }
+
 
 
     private void validateData_OLD(String correo, String clave){

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bienvenida"
-    tools:context=".login">
+    tools:context="com.example.library.Login">
 
     <androidx.cardview.widget.CardView
         android:layout_width="371dp"
@@ -51,39 +51,35 @@
                 android:id="@+id/radioGroup"
                 android:layout_width="297dp"
                 android:layout_height="73dp"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/btn_crear_maestro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.94">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <RadioButton
+                    android:id="@+id/rd_maestro"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:gravity="center"
+                    android:text="Maestro" />
 
-                    <RadioButton
-                        android:id="@+id/rd_maestro"
-                        android:layout_width="97dp"
-                        android:layout_height="49dp"
-                        android:text="Maestro"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/rd_usuario"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <RadioButton
-                        android:id="@+id/rd_usuario"
-                        android:layout_width="97dp"
-                        android:layout_height="49dp"
-                        android:text="Usuario"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.825"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <RadioButton
+                    android:id="@+id/rd_usuario"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:gravity="center"
+                    android:text="Usuario" />
             </RadioGroup>
+
+
 
             <Button
                 android:id="@+id/btn_crear_maestro"
