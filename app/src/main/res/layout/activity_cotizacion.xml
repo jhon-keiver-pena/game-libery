@@ -12,12 +12,14 @@
         android:layout_width="364dp"
         android:layout_height="683dp"
         app:cardBackgroundColor="#00FFFFFF"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="24dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="357dp"
+            android:layout_height="679dp">
 
             <ImageView
                 android:id="@+id/imageView4"
