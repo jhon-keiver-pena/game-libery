@@ -19,6 +19,9 @@
         android:theme="@style/Theme.GameLibery"
         tools:targetApi="31">
         <activity
+            android:name="com.example.library.service.HomeMaestro"
+            android:exported="false" />
+        <activity
             android:name="com.example.library.service.ejemplo"
             android:exported="false" />
         <activity

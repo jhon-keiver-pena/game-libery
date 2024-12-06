@@ -53,20 +53,28 @@ public class Reserva extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reserva);
 
+        // Inicialización de vistas
         info = findViewById(R.id.txt_Info);
         confirmar = findViewById(R.id.btn_confirmar);
         volverHome = findViewById(R.id.btnVHome);
         volverCotizar = findViewById(R.id.btn_VCotizar);
 
+        // Obtener los datos del Intent que se pasó desde Cotizar
         Intent intent = getIntent();
         String comunaSeleccionada = intent.getStringExtra("comuna");
         String diaSeleccionado = intent.getStringExtra("dia");
+        String horaSeleccionada = intent.getStringExtra("hora");  // Recibir la hora
         double valorCotizacion = intent.getDoubleExtra("valor_cotizacion", 0);
+        Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");  // Recuperar el objeto Maestro
 
-        info.setText("Comuna: " + comunaSeleccionada + "\nDía: " + diaSeleccionado + "\nValor: $" + valorCotizacion);
+        // Mostrar la información recibida
+        info.setText("Comuna: " + comunaSeleccionada + "\nDía: " + diaSeleccionado
+                + "\nHora: " + horaSeleccionada + "\nValor: $" + valorCotizacion);
 
+        // Crear un ejecutor para manejar tareas en segundo plano (si es necesario)
         executor = Executors.newSingleThreadExecutor();
 
+        // Configurar los botones
         volverHome.setOnClickListener(view -> {
             Intent homeIntent = new Intent(getBaseContext(), Home.class);
             startActivity(homeIntent);
@@ -74,10 +82,25 @@ public class Reserva extends AppCompatActivity {
         });
 
         volverCotizar.setOnClickListener(view -> {
-            Intent cotizarIntent = new Intent(getBaseContext(), Cotizar.class);
-            startActivity(cotizarIntent);
-            finish();
+            // Obtener el objeto 'maestro' desde el Intent
+            Maestro maestroV = (Maestro) getIntent().getSerializableExtra("maestro");
+
+            if (maestro != null) {
+                Intent cotizarIntent = new Intent(getBaseContext(), Cotizar.class);
+                cotizarIntent.putExtra("maestro", maestro);  // Pasar el objeto maestro
+                cotizarIntent.putExtra("comuna", comunaSeleccionada);  // Pasar la comuna
+                cotizarIntent.putExtra("dia", diaSeleccionado);  // Pasar el día
+                cotizarIntent.putExtra("hora", horaSeleccionada);  // Pasar la hora
+                cotizarIntent.putExtra("valor_cotizacion", valorCotizacion);  // Pasar el valor de cotización
+                startActivity(cotizarIntent);
+                finish();
+            } else {
+                Toast.makeText(Reserva.this, "Error: Maestro no encontrado", Toast.LENGTH_SHORT).show();
+            }
         });
+
+
+
 
         confirmar.setOnClickListener(view -> realizarReserva());
     }
@@ -91,23 +114,25 @@ public class Reserva extends AppCompatActivity {
 
         String comunaSeleccionada = getIntent().getStringExtra("comuna");
         String diaSeleccionado = getIntent().getStringExtra("dia");
+        String horaSeleccionada = getIntent().getStringExtra("hora");  // Recibir la hora
         double valorCotizacion = getIntent().getDoubleExtra("valor_cotizacion", 0.0);
 
-        if (idMaestro == -1 || comunaSeleccionada.isEmpty() || diaSeleccionado.isEmpty() || idUsuario == -1) {
+        if (idMaestro == -1 || comunaSeleccionada.isEmpty() || diaSeleccionado.isEmpty() || idUsuario == -1 || horaSeleccionada == null) {
             Toast.makeText(Reserva.this, "Datos inválidos para realizar la reserva", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String fechaVisita = obtenerFechaPorNombreDia(diaSeleccionado);
+        String fechaVisita = obtenerFechaConHora(diaSeleccionado, horaSeleccionada);
         if (fechaVisita == null) {
-            Toast.makeText(this, "Error al obtener la fecha", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al obtener la fecha y hora", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Crear el JSON con los datos de la reserva
         JSONObject reservaJSON = new JSONObject();
         try {
             reservaJSON.put("id_maestro", idMaestro);
-            reservaJSON.put("fecha_visita", fechaVisita);
+            reservaJSON.put("fecha_visita", fechaVisita); // Fecha y hora combinadas
             reservaJSON.put("coste", valorCotizacion);
             reservaJSON.put("ciudad", comunaSeleccionada);
             reservaJSON.put("id_usuario", idUsuario);
@@ -118,10 +143,12 @@ public class Reserva extends AppCompatActivity {
             return;
         }
 
+        // Enviar la reserva al servidor
         sendReservation(reservaJSON);
     }
 
-    private String obtenerFechaPorNombreDia(String diaNombre) {
+    // Función para obtener la fecha y hora combinadas
+    private String obtenerFechaConHora(String diaNombre, String horaSeleccionada) {
         int diaDeseado;
         switch (diaNombre.toLowerCase()) {
             case "domingo": diaDeseado = Calendar.SUNDAY; break;
@@ -144,13 +171,39 @@ public class Reserva extends AppCompatActivity {
 
         calendar.add(Calendar.DAY_OF_MONTH, diasHastaProximo);
 
+        // Parsear la hora seleccionada y convertirla al formato adecuado (HH:mm)
+        String horaFormateada = formatHora(horaSeleccionada);
+
+        // Combinar fecha y hora
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-        calendar.set(Calendar.HOUR_OF_DAY, 17); // Hora predeterminada
-        calendar.set(Calendar.MINUTE, 30);     // Minutos predeterminados
-        calendar.set(Calendar.SECOND, 0);      // Segundos predeterminados
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(horaFormateada.split(":")[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(horaFormateada.split(":")[1]));
+        calendar.set(Calendar.SECOND, 0); // Segundos predeterminados
+
         return sdf.format(calendar.getTime());
     }
 
+    // Función para formatear la hora de 12h (am/pm) a 24h
+    private String formatHora(String hora) {
+        int horaInt;
+        String minuto = "00";  // Asumimos 00 minutos si no se especifica
+
+        if (hora.endsWith("am")) {
+            horaInt = Integer.parseInt(hora.replace("am", "").trim());
+            if (horaInt == 12) {
+                horaInt = 0; // Si es "12am", debe ser 00:00
+            }
+        } else {
+            horaInt = Integer.parseInt(hora.replace("pm", "").trim());
+            if (horaInt != 12) {
+                horaInt += 12; // Convertir a formato 24 horas
+            }
+        }
+
+        return String.format("%02d:%s", horaInt, minuto);
+    }
+
+    // Enviar la reserva al servidor
     private void sendReservation(JSONObject reservaJSON) {
         executor.execute(() -> {
             try {
@@ -201,4 +254,5 @@ public class Reserva extends AppCompatActivity {
         executor.shutdown();
     }
 }
+
 

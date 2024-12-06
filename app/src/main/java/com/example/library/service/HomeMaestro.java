@@ -1,28 +1,34 @@
-package com.example.library;
+package com.example.library.service;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gamelibery.R;
-import com.example.library.service.UserService;
+import com.example.library.CustomSpinnerAdapter;
+import com.example.library.EditarMaestro;
+import com.example.library.EditarUsuario;
+import com.example.library.Home;
+import com.example.library.Login;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends AppCompatActivity {
+public class HomeMaestro extends AppCompatActivity {
 
     private Spinner customSpinner;
     private ViewFlipper vf;
-    private Button btnCrear, btnReserva;
 
     private int[] image = {R.drawable.img_herramientas, R.drawable.img_obra, R.drawable.img_casco};
 
@@ -39,13 +45,11 @@ public class Home extends AppCompatActivity {
             finish();
         }
 
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_maestro);
 
         // Inicializar componentes
-        customSpinner = findViewById(R.id.spinner3);
+        customSpinner = findViewById(R.id.spinner4);
         vf = findViewById(R.id.slider2);
-        btnCrear = findViewById(R.id.ir_biblioteca);
-        btnReserva = findViewById(R.id.btn_reservas);
 
         // Configurar el ViewFlipper
         for (int i = 0; i < image.length; i++) {
@@ -54,19 +58,6 @@ public class Home extends AppCompatActivity {
 
         // Configurar el Spinner personalizado
         setupSpinner();
-
-        // Acciones de botones
-        btnCrear.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, BibliotecaMaestro.class);
-            startActivity(intent);
-            finish();
-        });
-
-        btnReserva.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, ListaReservaActivity.class);
-            startActivity(intent);
-            finish();
-        });
     }
 
     private void setupSpinner() {
@@ -89,7 +80,7 @@ public class Home extends AppCompatActivity {
 
                         break;
                     case 1: // Configuración
-                        Intent intentConfig = new Intent(Home.this, EditarUsuario.class);
+                        Intent intentConfig = new Intent(HomeMaestro.this, EditarMaestro.class);
                         startActivity(intentConfig);
                         break;
                 }
