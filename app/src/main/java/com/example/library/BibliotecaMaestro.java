@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,8 +34,11 @@ public class BibliotecaMaestro extends AppCompatActivity {
 
     private ListView listViewMaestros;
     private ArrayAdapter<String> adapter;
-    private List<Maestro> maestroList; // Lista completa de objetos Maestro
-    private List<String> maestroInfoList; // Lista para mostrar solo nombre y especialidad
+    private List<Maestro> maestroList;
+    private List<String> maestroInfoList;
+
+    private Spinner spinnerCategorias;
+    private List<Categoria> listaCategorias;
     private ExecutorService executor;
 
     private Button btnVolverHome;
@@ -40,57 +46,73 @@ public class BibliotecaMaestro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Validar si esta logeado
+
+        // Validar si está logueado
         UserService userService = (UserService) getApplicationContext();
-        if (!userService.getUsuario().isLogin()){
-            Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
+        if (!userService.getUsuario().isLogin()) {
+            Toast.makeText(this, "Debes iniciar sesión para acceder a esta pantalla",
                     Toast.LENGTH_SHORT).show();
-            //redirige a un activity
             Intent intent = new Intent(getBaseContext(), Login.class);
             startActivity(intent);
             finish();
         }
         setContentView(R.layout.activity_biblioteca_maestro);
 
+        // Inicializar elementos de la UI
         btnVolverHome = findViewById(R.id.btn_home);
-        // Inicializar ListView y listas
         listViewMaestros = findViewById(R.id.listViewReservas);
+        spinnerCategorias = findViewById(R.id.spinner2);
+
         maestroInfoList = new ArrayList<>();
-        maestroList = new ArrayList<>(); // Aquí almacenamos los objetos completos
+        maestroList = new ArrayList<>();
+        listaCategorias = new ArrayList<>();
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, maestroInfoList);
         listViewMaestros.setAdapter(adapter);
 
-        // Inicializar el ExecutorService
         executor = Executors.newSingleThreadExecutor();
 
-        // Cargar los maestros
-        loadMaestros();
+        // Cargar las categorías
+        loadCategorias();
 
-        // Configurar la acción al hacer clic en un elemento de la lista
-        listViewMaestros.setOnItemClickListener((parent, view, position, id) -> {
-            Maestro selectedMaestro = maestroList.get(position); // Obtenemos el maestro seleccionado
+        // Configurar el Spinner
+        spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    // Si se selecciona la opción "Seleccione una categoría", no hacer nada
+                    return;
+                }
+                int idCategoriaSeleccionada = listaCategorias.get(position - 1).getIdCategoria(); // -1 para evitar la primera opción
+                loadMaestrosPorCategoria(idCategoriaSeleccionada);
+            }
 
-            // Pasamos el objeto Maestro al siguiente Activity
-            Intent intent = new Intent(BibliotecaMaestro.this, DetalleMaestro.class);
-            intent.putExtra("maestro", selectedMaestro); // Pasamos el objeto Maestro (debe ser Serializable o Parcelable)
-            startActivity(intent);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No hacer nada si no se selecciona ninguna opción
+            }
         });
 
+        // Configurar la acción del botón "Volver a Home"
         btnVolverHome.setOnClickListener(view -> {
-            //redirige a un activity
             Intent intent = new Intent(getBaseContext(), Home.class);
             startActivity(intent);
             finish();
         });
+
+        // Configurar clic en los elementos del ListView
+        listViewMaestros.setOnItemClickListener((parent, view, position, id) -> {
+            Maestro selectedMaestro = maestroList.get(position);
+            Intent intent = new Intent(BibliotecaMaestro.this, DetalleMaestro.class);
+            intent.putExtra("maestro", selectedMaestro);
+            startActivity(intent);
+        });
     }
 
-    private void loadMaestros() {
+    private void loadCategorias() {
         executor.execute(() -> {
-            List<Maestro> maestros = new ArrayList<>();
-            List<String> maestrosInfo = new ArrayList<>();
             try {
-                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros");
+                URL url = new URL("https://ms-categorias-1078682117753.us-central1.run.app/v1/categorias");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
 
@@ -101,23 +123,61 @@ public class BibliotecaMaestro extends AppCompatActivity {
                     response.append(line);
                 }
                 reader.close();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-                // Parsear el JSON y extraer los detalles completos de cada maestro
                 JSONArray jsonArray = new JSONArray(response.toString());
+                List<String> nombresCategorias = new ArrayList<>();
+
+                // Añadir la opción inicial al Spinner
+                nombresCategorias.add("Seleccione una categoría"); // Primera opción del Spinner
+
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Categoria categoria = new Categoria(
+                            jsonObject.getInt("id_categoria"),
+                            jsonObject.getString("especialidad")
+                    );
+                    listaCategorias.add(categoria);
+                    nombresCategorias.add(categoria.getEspecialidad());
+                }
 
-                    String imageBase64 = jsonObject.isNull("image") ? null : jsonObject.optString("image"); // Usar optString para evitar errores
-                    byte[] imageBytes = null;
-                    if (imageBase64 !=null){
-                        try {
-                            imageBytes = Base64.decode(imageBase64, Base64.DEFAULT);
-                        } catch (IllegalArgumentException e) {
-                            Log.d("Decodificacion-imagen", "Error al decodificar immagen : {}", e);
-                        }
-                    }
+                runOnUiThread(() -> {
+                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(BibliotecaMaestro.this,
+                            android.R.layout.simple_spinner_item, nombresCategorias);
+                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerCategorias.setAdapter(spinnerAdapter);
 
+                    // Establecer la selección inicial en "Seleccione una categoría"
+                    spinnerCategorias.setSelection(0);
+                });
+
+            } catch (Exception e) {
+                Log.d("Carga-categorias", "Error al cargar categorías: ", e);
+            }
+        });
+    }
+
+    private void loadMaestrosPorCategoria(int idCategoria) {
+        executor.execute(() -> {
+            List<Maestro> maestros = new ArrayList<>();
+            List<String> maestrosInfo = new ArrayList<>();
+            try {
+                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros/categoria/" + idCategoria);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                JSONArray jsonArray = new JSONArray(response.toString());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Maestro maestro = new Maestro(
                             jsonObject.getInt("id_maestro"),
                             jsonObject.getInt("id_categoria"),
@@ -129,19 +189,21 @@ public class BibliotecaMaestro extends AppCompatActivity {
                             formatter.parse(jsonObject.getString("tiempo_campo")),
                             jsonObject.getString("correo"),
                             jsonObject.getString("clave"),
-                            imageBytes
+                            null
                     );
-                    //TODO: Traer las categorias en una lista y el nombre
-                    // irlo asignando a cada maestro segun el id_categoria
-                    maestro.setNombreCategoria("Categoria Test");
+                    maestro.setNombreCategoria(listaCategorias.stream()
+                            .filter(c -> c.getIdCategoria() == maestro.getIdCategoria())
+                            .findFirst()
+                            .map(Categoria::getEspecialidad)
+                            .orElse("Desconocida"));
+
                     maestros.add(maestro);
-                    maestrosInfo.add(maestro.getNombre() + " - " + maestro.getNombreCategoria()); // Solo nombre y especialidad para mostrar en el ListView
+                    maestrosInfo.add(maestro.getNombre() + " - " + maestro.getNombreCategoria());
                 }
             } catch (Exception e) {
-                Log.d("Lidado-maestros", "Error en listar : {}", e);
+                Log.d("Carga-maestros", "Error al cargar maestros: ", e);
             }
 
-            // Actualizar la UI en el hilo principal
             runOnUiThread(() -> {
                 maestroList.clear();
                 maestroList.addAll(maestros);
@@ -155,6 +217,8 @@ public class BibliotecaMaestro extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        executor.shutdown(); // Limpiar el ExecutorService
+        executor.shutdown();
     }
 }
+
+

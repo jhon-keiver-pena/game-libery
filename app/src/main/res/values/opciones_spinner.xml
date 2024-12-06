@@ -47,6 +47,14 @@
         <item>Domingo</item>
     </string-array>
 
+    <string-array name="horas">
+        <item>8am</item>
+        <item>10am</item>
+        <item>12pm</item>
+        <item>2pm</item>
+        <item>4pm</item>
+    </string-array>
+
     <string-array name="estados">
         <item>Confirmada</item>
         <item>Cancelada</item>

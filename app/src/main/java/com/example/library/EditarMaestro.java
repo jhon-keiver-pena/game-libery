@@ -1,5 +1,6 @@
 package com.example.library;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gamelibery.R;
 import com.example.library.model.rest.Maestro;
+import com.example.library.service.HomeMaestro;
 
 import org.json.JSONObject;
 
@@ -57,12 +59,12 @@ public class EditarMaestro extends AppCompatActivity {
             return;
         }
 
-        // Obtener los detalles del maestro desde el servidor
-        new GetMaestroDetailsTask(idMaestro).execute();
-
         // Inicializar maestro
         maestro = new Maestro();
         maestro.setId(idMaestro);
+
+        // Obtener los detalles del maestro desde el servidor
+        new GetMaestroDetailsTask(idMaestro).execute();
 
         // Configurar botones
         bttGuardar.setOnClickListener(v -> modificarMaestro());
@@ -92,6 +94,86 @@ public class EditarMaestro extends AppCompatActivity {
     private void eliminarMaestro() {
         new DeleteMaestroTask(maestro.getId()).execute();
     }
+
+    private class GetMaestroDetailsTask extends AsyncTask<Void, Void, Maestro> {
+        private final int idMaestro;
+
+        public GetMaestroDetailsTask(int idMaestro) {
+            this.idMaestro = idMaestro;
+        }
+
+        @Override
+        protected Maestro doInBackground(Void... voids) {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros/" + idMaestro);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    reader.close();
+
+                    // Parsear el JSON y mapear al objeto Maestro
+                    JSONObject json = new JSONObject(response.toString());
+                    Maestro maestro = new Maestro();
+                    maestro.setId(json.getInt("id_maestro"));
+                    maestro.setNombre(json.getString("nombre"));
+                    maestro.setTelefono(json.getString("telefono"));
+                    maestro.setSexo(json.getString("sexo"));
+                    maestro.setEdad(String.valueOf(json.getInt("edad")));
+                    maestro.setExperiencia(json.getString("experiencia"));
+
+                    // Procesar tiempo_campo (remover 'Z' si está presente)
+                    String tiempoCampo = json.getString("tiempo_campo").replace("Z", "");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    maestro.setTiempoCampo(sdf.parse(tiempoCampo));
+
+                    maestro.setCorreo(json.getString("correo"));
+                    maestro.setClave(json.getString("clave"));
+
+                    return maestro;
+                } else {
+                    Log.e("GetMaestroDetails", "Error: Código de respuesta " + responseCode);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("GetMaestroDetails", "Error: " + e.getMessage());
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Maestro maestro) {
+            if (maestro != null) {
+                // Poblar los campos con los datos obtenidos
+                editNombre.setText(maestro.getNombre());
+                editPhone.setText(maestro.getTelefono());
+                editSexo.setText(maestro.getSexo());
+                editEdad.setText(maestro.getEdad());
+                editExperiencia.setText(maestro.getExperiencia());
+                editTiempoExperiencia.setText(new SimpleDateFormat("yyyy-MM-dd").format(maestro.getTiempoCampo()));
+                editEmail.setText(maestro.getCorreo());
+                editPassword.setText(maestro.getClave());
+            } else {
+                Toast.makeText(EditarMaestro.this, "Error al recuperar los datos", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     private class UpdateMaestroTask extends AsyncTask<Void, Void, String> {
         private final Maestro maestro;
@@ -126,6 +208,9 @@ public class EditarMaestro extends AppCompatActivity {
                 }
 
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    Intent intent = new Intent(getBaseContext(), HomeMaestro.class);
+                    startActivity(intent);
+                    finish();
                     return "Maestro actualizado exitosamente";
                 } else {
                     return "Error al actualizar: " + connection.getResponseCode();
@@ -156,6 +241,9 @@ public class EditarMaestro extends AppCompatActivity {
                 connection.setRequestMethod("DELETE");
 
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
                     return "Maestro eliminado exitosamente";
                 } else {
                     return "Error al eliminar: " + connection.getResponseCode();
@@ -173,62 +261,6 @@ public class EditarMaestro extends AppCompatActivity {
             }
         }
     }
-
-    // Clase GetMaestroDetailsTask fuera de DeleteMaestroTask
-    private class GetMaestroDetailsTask extends AsyncTask<Void, Void, Maestro> {
-        private final int idMaestro;
-
-        public GetMaestroDetailsTask(int idMaestro) {
-            this.idMaestro = idMaestro;
-        }
-
-        @Override
-        protected Maestro doInBackground(Void... voids) {
-            Maestro maestro = null;
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL("https://ms-maestros-1078682117753.us-central1.run.app/v1/maestros/" + idMaestro);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(5000); // Timeout for connection
-                connection.setReadTimeout(5000); // Timeout for reading response
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // Code for reading the response from the server
-                } else {
-                    // Log error for failed response
-                    Log.e("GetMaestroDetails", "Error: Response code " + responseCode);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("GetMaestroDetails", "Exception: " + e.getMessage());
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-            return maestro;
-        }
-
-
-        @Override
-        protected void onPostExecute(Maestro maestro) {
-            super.onPostExecute(maestro);
-            if (maestro != null) {
-                // Poblar los campos de edición con los datos obtenidos
-                editNombre.setText(maestro.getNombre());
-                editPhone.setText(maestro.getTelefono());
-                editSexo.setText(maestro.getSexo());
-                editEdad.setText(maestro.getEdad());
-                editExperiencia.setText(maestro.getExperiencia());
-                editTiempoExperiencia.setText(new SimpleDateFormat("yyyy-MM-dd").format(maestro.getTiempoCampo()));
-                editEmail.setText(maestro.getCorreo());
-                editPassword.setText(maestro.getClave());
-            } else {
-                Toast.makeText(EditarMaestro.this, "Error al recuperar los datos", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }
+
 

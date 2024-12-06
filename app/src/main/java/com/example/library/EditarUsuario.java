@@ -224,6 +224,9 @@ public class EditarUsuario extends AppCompatActivity {
                 // Obtener la respuesta del servidor
                 int responseCode = httpURLConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
                     return "Cuenta eliminada";
                 } else {
                     return "Error al eliminar cuenta: " + responseCode;

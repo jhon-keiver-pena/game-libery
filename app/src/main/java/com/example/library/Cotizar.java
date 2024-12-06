@@ -32,19 +32,22 @@ public class Cotizar extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Validar si esta logeado
+
+        // Validar si está logeado
         UserService userService = (UserService) getApplicationContext();
-        if (!userService.getUsuario().isLogin()){
+        if (!userService.getUsuario().isLogin()) {
             Toast.makeText(this, "Debes iniciar Sesion para acceder a esta pantalla",
                     Toast.LENGTH_SHORT).show();
-            //redirige a un activity
+            // Redirige a un activity
             Intent intent = new Intent(getBaseContext(), Login.class);
             startActivity(intent);
             finish();
         }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cotizacion);
 
+        // Inicializar vistas
         imageViewMaestro = findViewById(R.id.imageView4);
         txtComuna = findViewById(R.id.txtcomuna);
         txtDias = findViewById(R.id.txtDias);
@@ -54,147 +57,97 @@ public class Cotizar extends AppCompatActivity {
         btnCotizar = findViewById(R.id.btnCotiza);
         btnBiblioteca = findViewById(R.id.btnCotizarR);
         btnReserva = findViewById(R.id.btnConfirmar);
-        imageViewMaestro = findViewById(R.id.imageView4);
-        valorCotizacion= findViewById(R.id.txtValor);
+        valorCotizacion = findViewById(R.id.txtValor);
+        Spinner horas = findViewById(R.id.spinnerHora);
 
+        // Adaptador para el spinner de horas
+        ArrayAdapter<CharSequence> adapterHoras = ArrayAdapter.createFromResource(
+                this, R.array.horas, android.R.layout.simple_spinner_item);
+        horas.setAdapter(adapterHoras);
+
+        // Recuperar el objeto 'maestro' desde el Intent
         Maestro maestro = (Maestro) getIntent().getSerializableExtra("maestro");
-        String nombreMaestro = getIntent().getStringExtra("nombre_maestro");
 
-        // Mostrar el nombre del maestro si se ha recibido correctamente
-        if (nombreMaestro != null) {
-            infoMaestro.setText('\n' + maestro.getNombre() + '\n'+  maestro.getNombreCategoria());
+        // Si no se encuentra, mostrar un mensaje y terminar la actividad
+        if (maestro == null) {
+            Toast.makeText(this, "No se ha recibido información del maestro.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
+        // Mostrar el nombre del maestro si se ha recibido correctamente
         if (maestro != null) {
+            infoMaestro.setText('\n' + maestro.getNombre() + '\n' + maestro.getNombreCategoria());
 
             // Decodificar la imagen almacenada como byte[]
             byte[] imageData = maestro.getImage();
             if (imageData != null && imageData.length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                imageViewMaestro.setImageBitmap(bitmap); // Mostrar la imagen en el ImageView
+                imageViewMaestro.setImageBitmap(bitmap);
             } else {
-                imageViewMaestro.setImageResource(R.drawable.icono_default); // Imagen por defecto si no hay datos
+                imageViewMaestro.setImageResource(R.drawable.icono_default);
             }
-        }else {
-            Log.d("Cotizar", "El maestro es null.");
         }
 
-        //creamos un adaptador para implementar las opciones del spinner
-        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource
-                (this,R.array.comunas, android.R.layout.simple_spinner_item);
+        // Adaptadores para los spinners de comuna y días
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.comunas, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterDias = ArrayAdapter.createFromResource(
+                this, R.array.dias, android.R.layout.simple_spinner_item);
 
-        ArrayAdapter<CharSequence> adapterDias=ArrayAdapter.createFromResource
-                (this,R.array.dias, android.R.layout.simple_spinner_item);
-
-        //se carga el adaptador al spinner
         comuna.setAdapter(adapter);
-
         dias.setAdapter(adapterDias);
 
-        //creamos un evento para obtener la selecion del usuario
+        // Eventos para obtener la selección del usuario
         comuna.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-                Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString()
-                        ,Toast.LENGTH_SHORT).show();
-
                 txtComuna.setText(parent.getItemAtPosition(position).toString());
-
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
         dias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-                Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString()
-                        ,Toast.LENGTH_SHORT).show();
-
                 txtDias.setText(parent.getItemAtPosition(position).toString());
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
-        btnCotizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                cotizar();
-            }
-        });
+        btnCotizar.setOnClickListener(view -> cotizar());
 
         btnBiblioteca.setOnClickListener(view -> {
-            //redirige a un activity
             Intent intent = new Intent(getBaseContext(), BibliotecaMaestro.class);
             startActivity(intent);
             finish();
         });
 
-        btnReserva.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnReserva.setOnClickListener(view -> {
+            // Obtener datos para realizar la reserva
+            String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
+            String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
+            String horaSeleccionada = horas.getSelectedItem() != null ? horas.getSelectedItem().toString() : "";
+            double valorCotizado = generarPrecioPorComuna(comunaSeleccionada);
 
-                //datos que necesito pasar para Reservar
-                String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
-                String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
-                double valorCotizado = generarPrecioPorComuna(comunaSeleccionada);
-
-                Intent intent = new Intent(getBaseContext(), Reserva.class);
-                intent.putExtra("comuna", comunaSeleccionada);
-                intent.putExtra("dia", diaSeleccionado);
-                intent.putExtra("valor_cotizacion", valorCotizado);
-                intent.putExtra("maestro", maestro);
-                startActivity(intent);
-                finish();
-            }
+            // Enviar los datos al activity de Reserva
+            Intent intent = new Intent(getBaseContext(), Reserva.class);
+            intent.putExtra("comuna", comunaSeleccionada);
+            intent.putExtra("dia", diaSeleccionado);
+            intent.putExtra("hora", horaSeleccionada);  // Pasa la hora seleccionada
+            intent.putExtra("valor_cotizacion", valorCotizado);
+            intent.putExtra("maestro", maestro);  // Pasar el objeto maestro
+            startActivity(intent);
+            finish();
         });
     }
 
-    private void cotizar() {
-        String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
-        String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
-
-        // Validar que no se haya seleccionado "Seleccione Comuna" y "Seleccione Día"
-        if (comunaSeleccionada.isEmpty()) {
-            Toast.makeText(Cotizar.this, "Debe seleccionar una comuna válida", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (diaSeleccionado.isEmpty()) {
-            Toast.makeText(Cotizar.this, "Debe seleccionar un día válido", Toast.LENGTH_SHORT).show();
-            return;
-        }else {
-
-            // Generar un valor base de la comuna entre $20,000 y $50,000
-            double precioBase = generarPrecioPorComuna(comunaSeleccionada);
-
-            // Aumentar el precio si es fin de semana (sábado o domingo)
-            if (diaSeleccionado.equalsIgnoreCase("Sábado")
-                    || diaSeleccionado.equalsIgnoreCase("Domingo")) {
-                precioBase += 15000; // Incremento adicional por ser fin de semana
-            }
-
-            // Limitar el precio final al rango entre $20,000 y $65,000
-            if (precioBase > 65000) {
-                precioBase = 65000;
-            } else if (precioBase < 20000) {
-                precioBase = 20000;
-            }
-
-            // Mostrar el precio final en txtV
-            valorCotizacion.setText("El precio final es: $" + precioBase);
-        }
-    }
-
+    // Función para calcular el precio basado en la comuna
     private double generarPrecioPorComuna(String comuna) {
-        // Definir un precio base fijo para algunas comunas
         double precioBase;
         switch (comuna) {
             case "Cerrillos":
@@ -217,5 +170,37 @@ public class Cotizar extends AppCompatActivity {
         return precioBase;
     }
 
+    // Función para calcular y mostrar el precio final
+    private void cotizar() {
+        String comunaSeleccionada = comuna.getSelectedItem() != null ? comuna.getSelectedItem().toString() : "";
+        String diaSeleccionado = dias.getSelectedItem() != null ? dias.getSelectedItem().toString() : "";
 
+        // Validar que no se haya seleccionado "Seleccione Comuna" y "Seleccione Día"
+        if (comunaSeleccionada.isEmpty()) {
+            Toast.makeText(Cotizar.this, "Debe seleccionar una comuna válida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (diaSeleccionado.isEmpty()) {
+            Toast.makeText(Cotizar.this, "Debe seleccionar un día válido", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            // Generar un valor base de la comuna
+            double precioBase = generarPrecioPorComuna(comunaSeleccionada);
+
+            // Aumentar el precio si es fin de semana (sábado o domingo)
+            if (diaSeleccionado.equalsIgnoreCase("Sábado") || diaSeleccionado.equalsIgnoreCase("Domingo")) {
+                precioBase += 15000; // Incremento adicional por ser fin de semana
+            }
+
+            // Limitar el precio final al rango entre $20,000 y $65,000
+            if (precioBase > 65000) {
+                precioBase = 65000;
+            } else if (precioBase < 20000) {
+                precioBase = 20000;
+            }
+
+            // Mostrar el precio final en el TextView
+            valorCotizacion.setText("El precio final es: $" + precioBase);
+        }
+    }
 }
