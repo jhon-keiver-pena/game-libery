@@ -178,6 +178,16 @@ public class BibliotecaMaestro extends AppCompatActivity {
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String imageBase64 = jsonObject.isNull("image") ? null : jsonObject.optString("image"); // Usar optString para evitar errores
+                    byte[] imageBytes = null;
+                    if (imageBase64 !=null){
+                        try {
+                            imageBytes = Base64.decode(imageBase64, Base64.DEFAULT);
+                        } catch (IllegalArgumentException e) {
+                            Log.d("Decodificacion-imagen", "Error al decodificar immagen : {}", e);
+                        }
+                    }
                     Maestro maestro = new Maestro(
                             jsonObject.getInt("id_maestro"),
                             jsonObject.getInt("id_categoria"),
@@ -189,7 +199,7 @@ public class BibliotecaMaestro extends AppCompatActivity {
                             formatter.parse(jsonObject.getString("tiempo_campo")),
                             jsonObject.getString("correo"),
                             jsonObject.getString("clave"),
-                            null
+                            imageBytes
                     );
                     maestro.setNombreCategoria(listaCategorias.stream()
                             .filter(c -> c.getIdCategoria() == maestro.getIdCategoria())
