@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.gamelibery.R;
 import com.example.library.service.UserService;
 import com.example.library.model.rest.Maestro;
@@ -58,7 +56,7 @@ public class Cotizar extends AppCompatActivity {
         btnBiblioteca = findViewById(R.id.btnCotizarR);
         btnReserva = findViewById(R.id.btnConfirmar);
         valorCotizacion = findViewById(R.id.txtValor);
-        Spinner horas = findViewById(R.id.spinnerHora);
+        Spinner horas = findViewById(R.id.spinnerHoraDetalle);
 
         // Adaptador para el spinner de horas
         ArrayAdapter<CharSequence> adapterHoras = ArrayAdapter.createFromResource(

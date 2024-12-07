@@ -122,13 +122,13 @@
                 android:text="Seleccione hora:"
                 android:textColor="#000000"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/spinnerHora"
+                app:layout_constraintBottom_toTopOf="@+id/spinnerHoraDetalle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.073"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Spinner
-                android:id="@+id/spinnerHora"
+                android:id="@+id/spinnerHoraDetalle"
                 android:layout_width="280dp"
                 android:layout_height="27dp"
                 android:layout_marginBottom="8dp"

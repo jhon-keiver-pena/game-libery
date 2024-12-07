@@ -142,7 +142,7 @@ public class ListaReservaActivity extends AppCompatActivity {
                                 " - " + reserva.getEstado());
                     }
                 } else {
-                    runOnUiThread(() -> Toast.makeText(this, "Error al obtener reservas: " + responseCode, Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(this, "No hay Reservas disponibles: " + responseCode, Toast.LENGTH_SHORT).show());
                 }
 
                 connection.disconnect();

@@ -240,7 +240,7 @@ public class EditarMaestro extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("DELETE");
 
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_NO_CONTENT) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
