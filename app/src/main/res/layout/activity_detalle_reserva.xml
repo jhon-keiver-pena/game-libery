@@ -67,39 +67,30 @@
                         android:id="@+id/info_maestro"
                         android:layout_width="280dp"
                         android:layout_height="27dp"
-                        android:layout_marginBottom="30dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="1dp"
                         android:textColor="#000000"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toTopOf="@+id/textView16"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.506"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
                     <TextView
                         android:id="@+id/textView16"
                         android:layout_width="110dp"
                         android:layout_height="27dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="Fecha visita"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
-                        app:layout_constraintBottom_toTopOf="@+id/info_dia"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.063"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <EditText
-                        android:id="@+id/info_dia"
-                        android:layout_width="280dp"
-                        android:layout_height="27dp"
-                        android:layout_marginBottom="30dp"
-                        android:ems="10"
-                        android:inputType="date"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="81dp"
+                        android:text="Dia Visita"
                         android:textColor="#000000"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toTopOf="@+id/textView29"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintHorizontal_bias="0.063"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/info_maestro" />
 
                     <TextView
                         android:id="@+id/textView18"
@@ -153,19 +144,32 @@
                         android:text="Hora visita"
                         android:textColor="#000000"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toTopOf="@+id/spinner"
+                        app:layout_constraintBottom_toTopOf="@+id/spinnerHoraDetalle"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.048"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <Spinner
-                        android:id="@+id/spinner"
+                        android:id="@+id/spinnerHoraDetalle"
                         android:layout_width="280dp"
                         android:layout_height="27dp"
                         android:layout_marginBottom="30dp"
                         app:layout_constraintBottom_toTopOf="@+id/textView18"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
+
+                    <Spinner
+                        android:id="@+id/spinnerDiasDetalle"
+                        android:layout_width="280dp"
+                        android:layout_height="27dp"
+                        android:layout_marginStart="41dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="41dp"
+                        android:layout_marginBottom="30dp"
+                        app:layout_constraintBottom_toTopOf="@+id/textView29"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView16" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
