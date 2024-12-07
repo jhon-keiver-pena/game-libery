@@ -223,7 +223,7 @@ public class EditarUsuario extends AppCompatActivity {
 
                 // Obtener la respuesta del servidor
                 int responseCode = httpURLConnection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
+                if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
